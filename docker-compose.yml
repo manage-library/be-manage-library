@@ -1,0 +1,23 @@
+version: '3.0'
+
+services:
+  mysql:
+    image: mysql:8.0
+    platform: linux/x86_64
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
