@@ -1,3 +1,4 @@
+import { ERole, EVip } from './../common/enums/index';
 import { hashPassword } from './../common/helpers/bcrypt.helper';
 import { UserEntity } from '@src/modules/user/user.entity';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
@@ -59,6 +60,8 @@ export class createUserTable1642276887991 implements MigrationInterface {
         email: 'admin@gmail.com',
         password: hash,
         full_name: 'admin',
+        role_id: ERole.ADMIN,
+        vip_id: EVip.TYPE_6,
       }),
     );
   }
