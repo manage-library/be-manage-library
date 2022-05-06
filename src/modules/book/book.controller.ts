@@ -10,10 +10,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
 @ApiTags('Book')
+@ApiBearerAuth()
 @Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
@@ -26,10 +27,15 @@ export class BookController {
 
   @Get(':bookId')
   @UseGuards(JwtGuard)
+  @ApiParam({
+    name: 'bookId',
+    type: 'number',
+  })
   getOne(@Req() req: Request) {
+    const userId = req.user.userId;
     const { bookId } = req.params;
 
-    return this.bookService.getOne({ bookId });
+    return this.bookService.getOne({ bookId, userId });
   }
 
   @Post()
@@ -42,15 +48,13 @@ export class BookController {
 
   @Put(':bookId')
   @UseGuards(JwtGuard)
+  @ApiParam({
+    name: 'bookId',
+    type: 'number',
+  })
   update(@Req() req: Request, @Body() body: UpdateBookRequestDto) {
     const { bookId } = req.params;
 
     return this.bookService.update({ ...body, bookId });
-  }
-
-  @Get(':bookId/chapter/:chapterId')
-  @UseGuards(JwtGuard)
-  getChapterDetail(@Req() req: Request) {
-    const { bookId, chapterId } = req.params;
   }
 }

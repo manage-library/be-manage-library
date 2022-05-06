@@ -12,7 +12,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BookCategoryEntity } from './bookCategory.entity';
-import { ChapterEntity } from '@src/modules/book/entity/chapter.entity';
+import { ChapterEntity } from '@src/modules/chapter/chapter.entity';
 import { FavoriteEntity } from '@src/modules/favorite/favorite.entity';
 
 @Entity({ name: 'books' })
@@ -20,17 +20,11 @@ export class BookEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id' })
   id: number;
 
-  @Column('varchar', { name: 'name ' })
+  @Column('varchar', { name: 'name' })
   name: string;
 
   @Column('varchar', { name: 'description' })
   description: string;
-
-  @Column('int', { name: 'view' })
-  view: number;
-
-  @Column('int', { name: 'like' })
-  like: number;
 
   @Column('boolean', { name: 'is_vip' })
   is_vip: boolean;
@@ -49,7 +43,7 @@ export class BookEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.books)
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
-  user: UserEntity;
+  author: UserEntity;
 
   @OneToMany(() => BookCategoryEntity, (bookCategory) => bookCategory.book)
   bookCategory: BookCategoryEntity[];

@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createHistoriesTable1651284983629 implements MigrationInterface {
+export class createLikesTable1651284993085 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.createTable(
       new Table({
-        name: 'histories',
+        name: 'likes',
         columns: [
           {
             name: 'id',
@@ -22,11 +22,6 @@ export class createHistoriesTable1651284983629 implements MigrationInterface {
             type: 'int',
           },
           {
-            name: 'chapter_id',
-            type: 'int',
-            isNullable: true,
-          },
-          {
             name: 'created_at',
             type: 'datetime',
             default: 'CURRENT_TIMESTAMP',
@@ -42,6 +37,6 @@ export class createHistoriesTable1651284983629 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('histories');
+    queryRunner.dropTable('likes');
   }
 }

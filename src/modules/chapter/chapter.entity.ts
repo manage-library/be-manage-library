@@ -1,5 +1,5 @@
-import { HistoryEntity } from '../../history/history.entity';
-import { BookEntity } from './book.entity';
+import { BookEntity } from './../book/entity/book.entity';
+import { HistoryEntity } from '../history/history.entity';
 import { BaseEntity } from '@src/common/entities/base.entity';
 import {
   Column,
@@ -18,7 +18,7 @@ export class ChapterEntity extends BaseEntity {
   @Column('varchar', { name: 'name' })
   name: string;
 
-  @Column('text', { name: 'description' })
+  @Column('text', { name: 'description', nullable: true })
   description: string;
 
   @Column('longtext', { name: 'content' })

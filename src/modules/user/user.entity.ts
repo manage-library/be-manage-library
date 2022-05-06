@@ -28,7 +28,7 @@ export class UserEntity extends BaseEntity {
   @Column('boolean', { name: 'vip_id' })
   vip_id: number;
 
-  @OneToMany(() => BookEntity, (book) => book.user)
+  @OneToMany(() => BookEntity, (book) => book.author)
   books: BookEntity[];
 
   @OneToMany(() => CommentEntity, (comment) => comment.user)

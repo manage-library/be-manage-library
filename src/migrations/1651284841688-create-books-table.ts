@@ -22,10 +22,6 @@ export class createBooksTable1651284841688 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'view',
-            type: 'int',
-          },
-          {
             name: 'like',
             type: 'int',
           },

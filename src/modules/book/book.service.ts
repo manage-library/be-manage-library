@@ -1,4 +1,6 @@
-import { ChapterRepository } from './repository/chapter.repository';
+import { ChapterService } from './../chapter/chapter.service';
+import { HistoryService } from './../history/history.service';
+import { ECensorshipStatus } from './../../common/enums/index';
 import { CategoryRepository } from './../category/category.repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { BookRepository } from './repository/book.repository';
@@ -10,17 +12,56 @@ export class BookService {
     private readonly categoryRepository: CategoryRepository,
     private readonly bookRepository: BookRepository,
     private readonly bookCategoryRepository: BookCategoryRepository,
-    private readonly chapterRepository: ChapterRepository,
+    private readonly historyService: HistoryService,
+    private readonly chapterService: ChapterService,
   ) {}
 
   async getList() {
-    return this.bookRepository.find();
+    return this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoin('book.author', 'author')
+      .leftJoin('book.bookCategory', 'bookCategory')
+      .leftJoin('bookCategory.category', 'category')
+      .loadRelationCountAndMap('book.countChapter', 'book.chapters')
+      .select([
+        'book.id',
+        'book.name',
+        'book.description',
+        'book.is_vip',
+        'book.release_status',
+        'author.id',
+        'author.full_name',
+        'bookCategory.category_id',
+        'category.id',
+        'category.name',
+      ])
+      .getMany();
   }
 
-  async getOne({ bookId }) {
-    const book = await this.bookRepository.findOne({
-      id: bookId,
-    });
+  async getOne({ userId, bookId }) {
+    const book = await this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoin('book.author', 'author')
+      .leftJoin('book.chapters', 'chapters')
+      .leftJoin('book.bookCategory', 'bookCategory')
+      .leftJoin('bookCategory.category', 'category')
+      .loadRelationCountAndMap('book.countChapter', 'book.chapters')
+      .select([
+        'book.id',
+        'book.name',
+        'book.description',
+        'book.is_vip',
+        'book.release_status',
+        'author.id',
+        'author.full_name',
+        'chapters.id',
+        'chapters.name',
+        'bookCategory.category_id',
+        'category.id',
+        'category.name',
+      ])
+      .where('book.id = :bookId', { bookId })
+      .getOne();
 
     if (!book) {
       throw new HttpException(
@@ -30,14 +71,22 @@ export class BookService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
+    await this.historyService.update({
+      userId,
+      bookId,
+      chapterId: null,
+    });
+
+    return book;
   }
 
   async create({
     name,
     description,
     releaseStatus,
-    censorshipStatus,
     isVisible,
+    isVip,
     authorId,
     categoryIds,
     chapters,
@@ -70,7 +119,8 @@ export class BookService {
       name,
       description,
       release_status: releaseStatus,
-      censorship_status: censorshipStatus,
+      censorship_status: ECensorshipStatus.PENDING,
+      is_vip: isVip,
       is_visible: isVisible,
       author_id: authorId,
     });
@@ -82,9 +132,7 @@ export class BookService {
       })),
     );
 
-    await this.chapterRepository.save(
-      chapters.map((chapter) => ({ ...chapter, book_id: newBook.id })),
-    );
+    await this.chapterService.create({ bookId: newBook.id, chapters });
   }
 
   async update({
@@ -96,7 +144,7 @@ export class BookService {
     isVisible,
     categoryIds,
   }) {
-    if (categoryIds && categoryIds.length) {
+    if (categoryIds) {
       await this.bookCategoryRepository.delete({
         book_id: bookId,
       });
@@ -109,14 +157,15 @@ export class BookService {
       );
     }
 
-    await this.bookRepository.save({
-      id: bookId,
-      name,
-      description,
-      status,
-      is_visible: isVisible,
-      censorship_status: censorshipStatus,
-      release_status: releaseStatus,
-    });
+    await this.bookRepository.update(
+      { id: bookId },
+      {
+        name,
+        description,
+        is_visible: isVisible,
+        censorship_status: censorshipStatus,
+        release_status: releaseStatus,
+      },
+    );
   }
 }

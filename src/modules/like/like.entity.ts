@@ -1,6 +1,5 @@
-import { ChapterEntity } from '@src/modules/chapter/chapter.entity';
 import { UserEntity } from '@src/modules/user/user.entity';
-import { BookEntity } from './../book/entity/book.entity';
+import { BookEntity } from '../book/entity/book.entity';
 import { BaseEntity } from '@src/common/entities/base.entity';
 import {
   Column,
@@ -10,8 +9,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-@Entity({ name: 'histories' })
-export class HistoryEntity extends BaseEntity {
+@Entity({ name: 'likes' })
+export class LikeEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id' })
   id: number;
 
@@ -21,18 +20,11 @@ export class HistoryEntity extends BaseEntity {
   @Column('int', { name: 'book_id' })
   book_id: number;
 
-  @Column('int', { name: 'chapter_id', nullable: true })
-  chapter_id: number;
-
-  @ManyToOne(() => BookEntity, (book) => book.histories)
+  @ManyToOne(() => BookEntity, (book) => book.favorites)
   @JoinColumn({ name: 'book_id', referencedColumnName: 'id' })
   book: BookEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.histories)
+  @ManyToOne(() => UserEntity, (user) => user.favorites)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
-
-  @ManyToOne(() => ChapterEntity, (chapter) => chapter.histories)
-  @JoinColumn({ name: 'chapter_id', referencedColumnName: 'id' })
-  chapter: ChapterEntity;
 }

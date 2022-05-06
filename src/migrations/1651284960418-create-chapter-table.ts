@@ -20,6 +20,7 @@ export class createChapterTable1651284960418 implements MigrationInterface {
           {
             name: 'description',
             type: 'text',
+            isNullable: true,
           },
           {
             name: 'content',

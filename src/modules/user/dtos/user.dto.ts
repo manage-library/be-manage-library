@@ -58,3 +58,19 @@ export class UserRequestDto {
     Object.assign(this, data);
   }
 }
+
+@Exclude()
+export class UpdateProfileUser {
+  @ApiProperty()
+  @IsNotEmpty()
+  @MaxLength(50)
+  @Expose()
+  fullName: string;
+}
+
+@Exclude()
+export class UpdatePasswordUser {
+  @ApiProperty()
+  @Expose()
+  password: string;
+}
