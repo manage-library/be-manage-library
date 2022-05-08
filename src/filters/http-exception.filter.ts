@@ -9,6 +9,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       statusCode: err.status,
       status: false,
       context: err.response.context,
+      message: err.response.message,
     });
   }
 }

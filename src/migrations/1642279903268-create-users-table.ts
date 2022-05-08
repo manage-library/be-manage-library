@@ -77,6 +77,9 @@ export class createUserTable1642276887991 implements MigrationInterface {
         full_name: 'admin',
         role_id: ERole.ADMIN,
         vip_id: EVip.TYPE_6,
+        gender: null,
+        date_of_birth: null,
+        avatar: null,
       }),
     );
   }
