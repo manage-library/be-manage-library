@@ -22,7 +22,7 @@ export class UserEntity extends BaseEntity {
   @Column('varchar', { name: 'password' })
   password: string;
 
-  @Column('date', { name: 'date_of_birth', nullable: true })
+  @Column('datetime', { name: 'date_of_birth', nullable: true })
   date_of_birth: Date;
 
   @Column('int', { name: 'gender', nullable: true })

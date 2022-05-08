@@ -19,6 +19,7 @@ export class createUserTable1642276887991 implements MigrationInterface {
           {
             name: 'full_name',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'email',
@@ -30,18 +31,19 @@ export class createUserTable1642276887991 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'dateOfBirth',
-            type: 'date',
+            name: 'date_of_birth',
+            type: 'datetime',
             isNullable: true,
           },
           {
             name: 'avatar',
-            type: 'string',
+            type: 'varchar',
             isNullable: true,
           },
           {
             name: 'gender',
-            type: 'boolean',
+            type: 'int',
+            length: '1',
             isNullable: true,
           },
           {
@@ -77,9 +79,9 @@ export class createUserTable1642276887991 implements MigrationInterface {
         full_name: 'admin',
         role_id: ERole.ADMIN,
         vip_id: EVip.TYPE_6,
-        gender: null,
-        date_of_birth: null,
-        avatar: null,
+        // gender: 1,
+        // date_of_birth: '2000/10/17',
+        // avatar: '',
       }),
     );
   }
