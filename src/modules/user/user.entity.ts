@@ -22,6 +22,15 @@ export class UserEntity extends BaseEntity {
   @Column('varchar', { name: 'password' })
   password: string;
 
+  @Column('date', { name: 'date_of_birth', nullable: true })
+  date_of_birth: Date;
+
+  @Column('int', { name: 'gender', nullable: true })
+  gender: number;
+
+  @Column('varchar', { name: 'avatar', nullable: true })
+  avatar: string;
+
   @Column('int', { name: 'role_id' })
   role_id: number;
 

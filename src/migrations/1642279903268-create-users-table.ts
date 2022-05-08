@@ -30,6 +30,21 @@ export class createUserTable1642276887991 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'dateOfBirth',
+            type: 'date',
+            isNullable: true,
+          },
+          {
+            name: 'avatar',
+            type: 'string',
+            isNullable: true,
+          },
+          {
+            name: 'gender',
+            type: 'boolean',
+            isNullable: true,
+          },
+          {
             name: 'role_id',
             type: 'int',
             length: '1',

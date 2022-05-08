@@ -20,3 +20,9 @@ export enum ECensorshipStatus {
   APPROVED = 2,
   REJECTED = 3,
 }
+
+export enum EGender {
+  MALE = 1,
+  FEMALE = 2,
+  OTHER = 3,
+}

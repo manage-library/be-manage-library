@@ -1,3 +1,4 @@
+import { CommentModule } from './comment/comment.module';
 import { Module } from '@nestjs/common';
 
 import { AuthModule } from './auth/auth.module';
@@ -19,6 +20,7 @@ import { FavoriteModule } from './favorite/favorite.module';
     HistoryModule,
     LikeModule,
     FavoriteModule,
+    CommentModule,
   ],
   exports: [],
 })

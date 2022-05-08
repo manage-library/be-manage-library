@@ -12,12 +12,22 @@ export class UserService {
       where: {
         id: userId,
       },
-      select: ['email', 'full_name', 'vip_id'],
+      select: [
+        'email',
+        'full_name',
+        'vip_id',
+        'gender',
+        'avatar',
+        'date_of_birth',
+      ],
     });
   }
 
-  updateProfile({ userId, fullName }) {
-    this.userRepository.update({ id: userId }, { full_name: fullName });
+  updateProfile({ userId, fullName, avatar, dateOfBirth, gender }) {
+    this.userRepository.update(
+      { id: userId },
+      { full_name: fullName, avatar, gender, date_of_birth: dateOfBirth },
+    );
   }
 
   async updatePassword({ userId, password }) {

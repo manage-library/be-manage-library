@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { EGender } from './../../../common/enums/index';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MaxLength } from 'class-validator';
+import { IsDate, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 import { UserEntity } from '@src/modules/user/user.entity';
 
@@ -39,7 +40,7 @@ export class UserResponseDto {
 export class UserRequestDto {
   @ApiProperty()
   @IsNotEmpty()
-  @MaxLength(50)
+  @IsString()
   @Expose()
   fullName: string;
 
@@ -61,11 +62,26 @@ export class UserRequestDto {
 
 @Exclude()
 export class UpdateProfileUser {
-  @ApiProperty()
-  @IsNotEmpty()
-  @MaxLength(50)
+  @ApiPropertyOptional()
+  @IsString()
   @Expose()
   fullName: string;
+
+  @ApiPropertyOptional()
+  @IsDate()
+  @Expose()
+  dateOfBirth: Date;
+
+  @ApiPropertyOptional({
+    enum: EGender,
+    default: EGender.FEMALE,
+    examples: EGender,
+  })
+  gender: EGender;
+
+  @ApiPropertyOptional()
+  @IsString()
+  avatar: string;
 }
 
 @Exclude()
