@@ -1,4 +1,8 @@
-import { CreateBookRequestDto, UpdateBookRequestDto } from './dto/book.dto';
+import {
+  CrawlBook,
+  CreateBookRequestDto,
+  UpdateBookRequestDto,
+} from './dto/book.dto';
 import { JwtGuard } from './../../guards/jwt.guard';
 import { BookService } from './book.service';
 import {
@@ -56,5 +60,13 @@ export class BookController {
     const { bookId } = req.params;
 
     return this.bookService.update({ ...body, bookId });
+  }
+
+  @Post('/crawl')
+  @UseGuards(JwtGuard)
+  crawl(@Req() req: Request, @Body() body: CrawlBook) {
+    const userId = req.user.userId;
+    const { data } = body;
+    return this.bookService.crawl({ data, userId });
   }
 }

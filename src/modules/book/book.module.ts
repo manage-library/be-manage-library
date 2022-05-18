@@ -1,3 +1,4 @@
+import { CategoryModule } from './../category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookService } from './book.service';
 import { CategoryRepository } from './../category/category.repository';
@@ -17,6 +18,7 @@ import { ChapterModule } from '../chapter/chapter.module';
     ]),
     ChapterModule,
     HistoryModule,
+    CategoryModule,
   ],
   controllers: [BookController],
   providers: [BookService],
