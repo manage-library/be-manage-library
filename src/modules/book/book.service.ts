@@ -1,3 +1,5 @@
+import { EReleaseStatus } from '@src/common/enums';
+import { CategoryService } from './../category/category.service';
 import { ChapterService } from './../chapter/chapter.service';
 import { HistoryService } from './../history/history.service';
 import { ECensorshipStatus } from './../../common/enums/index';
@@ -14,6 +16,7 @@ export class BookService {
     private readonly bookCategoryRepository: BookCategoryRepository,
     private readonly historyService: HistoryService,
     private readonly chapterService: ChapterService,
+    private readonly categoryService: CategoryService,
   ) {}
 
   async getList() {
@@ -84,6 +87,7 @@ export class BookService {
   async create({
     name,
     description,
+    image,
     releaseStatus,
     isVisible,
     isVip,
@@ -118,6 +122,7 @@ export class BookService {
     const newBook = await this.bookRepository.save({
       name,
       description,
+      image,
       release_status: releaseStatus,
       censorship_status: ECensorshipStatus.PENDING,
       is_vip: isVip,
@@ -140,7 +145,6 @@ export class BookService {
     name,
     description,
     releaseStatus,
-    censorshipStatus,
     isVisible,
     categoryIds,
   }) {
@@ -163,9 +167,48 @@ export class BookService {
         name,
         description,
         is_visible: isVisible,
-        censorship_status: censorshipStatus,
         release_status: releaseStatus,
       },
     );
+  }
+
+  async crawl({ data, userId }) {
+    for (let i = 0; i < data.length; i++) {
+      const { book, category, description, chapters, image } = data[i];
+
+      const findCategory = await this.categoryService.getOne({
+        name: category,
+      });
+
+      if (!findCategory) {
+        const newCategory = await this.categoryService.create({
+          name: category,
+        });
+
+        await this.create({
+          name: book,
+          description,
+          image,
+          releaseStatus: EReleaseStatus.RELEASED,
+          isVisible: true,
+          isVip: false,
+          authorId: userId,
+          categoryIds: [newCategory.id],
+          chapters,
+        });
+      } else {
+        await this.create({
+          name: book,
+          description,
+          image,
+          releaseStatus: EReleaseStatus.RELEASED,
+          isVisible: true,
+          isVip: false,
+          authorId: userId,
+          categoryIds: [findCategory.id],
+          chapters,
+        });
+      }
+    }
   }
 }

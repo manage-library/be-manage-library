@@ -22,6 +22,11 @@ export class createBooksTable1651284841688 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'image',
+            type: 'text',
+            length: '1000',
+          },
+          {
             name: 'is_vip',
             type: 'boolean',
           },
@@ -31,10 +36,6 @@ export class createBooksTable1651284841688 implements MigrationInterface {
           },
           {
             name: 'release_status',
-            type: 'int',
-          },
-          {
-            name: 'censorship_status',
             type: 'int',
           },
           {

@@ -54,6 +54,11 @@ export class CreateBookRequestDto {
   @Expose()
   description: string;
 
+  @ApiPropertyOptional()
+  @IsString()
+  @Expose()
+  image: string;
+
   @ApiProperty({
     enum: EReleaseStatus,
     default: EReleaseStatus.RELEASING,
@@ -100,6 +105,11 @@ export class UpdateBookRequestDto {
   @Expose()
   description: string;
 
+  @ApiPropertyOptional()
+  @IsString()
+  @Expose()
+  image: string;
+
   @ApiPropertyOptional({
     enum: EReleaseStatus,
     default: EReleaseStatus.RELEASING,
@@ -126,4 +136,12 @@ export class UpdateBookRequestDto {
   @IsArray()
   @Expose()
   categoryIds: number[];
+}
+
+@Exclude()
+export class CrawlBook {
+  @ApiProperty()
+  @IsArray()
+  @Expose()
+  data: any;
 }

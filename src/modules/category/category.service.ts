@@ -24,13 +24,21 @@ export class CategoryService {
       );
     }
 
-    await this.categoryRepository.save({
+    const newCategory = await this.categoryRepository.save({
       name,
     });
+
+    return newCategory;
   }
 
   getList() {
     return this.categoryRepository.find();
+  }
+
+  getOne({ name }) {
+    return this.categoryRepository.findOne({
+      name,
+    });
   }
 
   async update({ categoryId, name }) {

@@ -12,5 +12,6 @@ import { BookCategoryRepository } from '../book/repository/bookCategory.reposito
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

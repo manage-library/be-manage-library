@@ -26,6 +26,9 @@ export class BookEntity extends BaseEntity {
   @Column('varchar', { name: 'description' })
   description: string;
 
+  @Column('varchar', { name: 'image' })
+  image: string;
+
   @Column('boolean', { name: 'is_vip' })
   is_vip: boolean;
 
@@ -34,9 +37,6 @@ export class BookEntity extends BaseEntity {
 
   @Column('int', { name: 'release_status' })
   release_status: number;
-
-  @Column('int', { name: 'censorship_status' })
-  censorship_status: number;
 
   @Column('int', { name: 'author_id' })
   author_id: number;
