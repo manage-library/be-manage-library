@@ -20,7 +20,7 @@ export class LikeEntity extends BaseEntity {
   @Column('int', { name: 'book_id' })
   book_id: number;
 
-  @ManyToOne(() => BookEntity, (book) => book.favorites)
+  @ManyToOne(() => BookEntity, (book) => book.likes)
   @JoinColumn({ name: 'book_id', referencedColumnName: 'id' })
   book: BookEntity;
 

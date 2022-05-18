@@ -34,19 +34,6 @@ export class ChapterService {
   }
 
   async create({ bookId, chapters }) {
-    const chapter = await this.chapterRepository.findOne({
-      book_id: bookId,
-    });
-
-    if (!chapter) {
-      throw new HttpException(
-        {
-          context: '',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     await this.chapterRepository.save(
       chapters.map((chapter) => ({ ...chapter, book_id: bookId })),
     );

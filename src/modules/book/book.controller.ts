@@ -64,9 +64,8 @@ export class BookController {
 
   @Post('/crawl')
   @UseGuards(JwtGuard)
-  crawl(@Req() req: Request, @Body() body: CrawlBook) {
+  crawl(@Req() req: Request) {
     const userId = req.user.userId;
-    const { data } = body;
-    return this.bookService.crawl({ data, userId });
+    return this.bookService.crawl({ userId });
   }
 }

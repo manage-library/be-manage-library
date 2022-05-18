@@ -7,6 +7,9 @@ import { CategoryRepository } from './../category/category.repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const cheerio = require('cheerio');
+const axios = require('axios');
 
 @Injectable()
 export class BookService {
@@ -26,10 +29,14 @@ export class BookService {
       .leftJoin('book.bookCategory', 'bookCategory')
       .leftJoin('bookCategory.category', 'category')
       .loadRelationCountAndMap('book.countChapter', 'book.chapters')
+      .loadRelationCountAndMap('book.countView', 'book.histories')
+      .loadRelationCountAndMap('book.countLike', 'book.likes')
+      .loadRelationCountAndMap('book.countDownload', 'book.downloads')
       .select([
         'book.id',
         'book.name',
         'book.description',
+        'book.image',
         'book.is_vip',
         'book.release_status',
         'author.id',
@@ -49,9 +56,13 @@ export class BookService {
       .leftJoin('book.bookCategory', 'bookCategory')
       .leftJoin('bookCategory.category', 'category')
       .loadRelationCountAndMap('book.countChapter', 'book.chapters')
+      .loadRelationCountAndMap('book.countView', 'book.histories')
+      .loadRelationCountAndMap('book.countLike', 'book.likes')
+      .loadRelationCountAndMap('book.countDownload', 'book.downloads')
       .select([
         'book.id',
         'book.name',
+        'book.image',
         'book.description',
         'book.is_vip',
         'book.release_status',
@@ -98,14 +109,19 @@ export class BookService {
     const book = await this.bookRepository.findOne({
       name,
     });
+    let newBook: any = {};
 
-    if (book) {
-      return new HttpException(
-        {
-          context: '',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!book) {
+      newBook = await this.bookRepository.save({
+        name,
+        description,
+        image,
+        release_status: releaseStatus,
+        censorship_status: ECensorshipStatus.PENDING,
+        is_vip: isVip,
+        is_visible: isVisible,
+        author_id: authorId,
+      });
     }
 
     const categories = await this.categoryRepository.findByIds(categoryIds);
@@ -119,25 +135,17 @@ export class BookService {
       );
     }
 
-    const newBook = await this.bookRepository.save({
-      name,
-      description,
-      image,
-      release_status: releaseStatus,
-      censorship_status: ECensorshipStatus.PENDING,
-      is_vip: isVip,
-      is_visible: isVisible,
-      author_id: authorId,
-    });
-
     await this.bookCategoryRepository.save(
       categoryIds.map((categoryId: number) => ({
         category_id: categoryId,
-        book_id: newBook.id,
+        book_id: newBook.id || book.id,
       })),
     );
 
-    await this.chapterService.create({ bookId: newBook.id, chapters });
+    await this.chapterService.create({
+      bookId: newBook.id || book.id,
+      chapters,
+    });
   }
 
   async update({
@@ -172,8 +180,84 @@ export class BookService {
     );
   }
 
-  async crawl({ data, userId }) {
+  async crawl({ userId }) {
     try {
+      const url = 'https://www.sachhayonline.com';
+      const data = [];
+
+      const getChapterDetail = async ({ href }) => {
+        const response = await axios(`${url}/tua-sach/${href}`);
+        const $ = cheerio.load(response.data);
+        $.html();
+
+        const content = $('.reading-white p');
+        let chapterContent = '';
+
+        Object.keys(content).forEach((key) => {
+          try {
+            chapterContent += content[key].children[0].data += '\n';
+          } catch (error) {
+            // chapterContent += el.children[0].data += '\n';
+          }
+        });
+
+        return chapterContent;
+      };
+
+      const getBookDetail = async (response) => {
+        const $ = cheerio.load(response.data);
+        $.html();
+
+        const category = $('.nav a')[1].children[0].data;
+        const book = $('.inner > a > h3')[0].children[0].data;
+        const description = $('.inner > p')[0]?.children[0]?.data;
+        const image = $('.image > a > img')[0].attribs.src;
+        const chapters = [];
+        const content = $('.default > li');
+
+        for (let i = 0; i < Object.keys(content).length; i++) {
+          // if (i > 0 && i < 10) {
+          try {
+            const chapterContent = await getChapterDetail({
+              href: content[Object.keys(content)[i]].children[0].attribs.href,
+            });
+
+            chapters.push({
+              name: content[Object.keys(content)[i]].children[0].attribs.title,
+              content: chapterContent,
+            });
+          } catch (error) {}
+          // }
+        }
+
+        data.push({
+          category,
+          book,
+          description,
+          image: `${url}/${image.substring(3)}`,
+          chapters,
+        });
+      };
+
+      await axios(url).then(async (response) => {
+        const $ = cheerio.load(response.data);
+        $.html();
+
+        const books = $('.box > .image > a');
+
+        for (let i = 0; i < Object.keys(books).length; i++) {
+          if (i === 14) {
+            try {
+              await axios(
+                `${url}/${books[Object.keys(books)[i]].attribs.href}`,
+              ).then(getBookDetail);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+      });
+
       for (let i = 0; i < data.length; i++) {
         const { book, category, description, chapters, image } = data[i];
 
@@ -212,7 +296,12 @@ export class BookService {
         }
       }
     } catch (e) {
-      console.log(e);
+      new HttpException(
+        {
+          context: '',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

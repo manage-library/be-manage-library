@@ -1,3 +1,4 @@
+import { LikeEntity } from './../../like/like.entity';
 import { HistoryEntity } from './../../history/history.entity';
 import { DownloadEntity } from './../../download/download.entity';
 import { CommentEntity } from './../../comment/comment.entity';
@@ -59,6 +60,9 @@ export class BookEntity extends BaseEntity {
 
   @OneToMany(() => FavoriteEntity, (favorite) => favorite.book)
   favorites: FavoriteEntity[];
+
+  @OneToMany(() => LikeEntity, (favorite) => favorite.book)
+  likes: LikeEntity[];
 
   @OneToMany(() => HistoryEntity, (history) => history.book)
   histories: HistoryEntity[];
