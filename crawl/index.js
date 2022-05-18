@@ -3,18 +3,26 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 
 const url = 'https://www.sachhayonline.com';
+const all = [];
 
-const getChapterDetail = async ({ data }) => {
-  await axios(`${url}/tua-sach/${data.href}`).then((response) => {
-    const $ = cheerio.load(response.data);
-    $.html();
+const getChapterDetail = async ({ href }) => {
+  const response = await axios(`${url}/tua-sach/${href}`);
+  const $ = cheerio.load(response.data);
+  $.html();
 
-    const content = $('.reading-white > p');
+  const content = $('.reading-white p').contents();
+  let chapterContent = '';
 
-    Object.keys(content).forEach((key) => {
-      console.log(content[key].children[0].data);
-    });
+  Object.keys(content).forEach((key) => {
+    try {
+      chapterContent += content[key].data += '\n';
+    } catch (error) {
+      // chapterContent += el.children[0].data += '\n';
+      console.log(content[key].children);
+    }
   });
+
+  return chapterContent;
 };
 
 const getBookDetail = async (response) => {
@@ -23,21 +31,31 @@ const getBookDetail = async (response) => {
 
   const category = $('.nav a')[1].children[0].data;
   const book = $('.inner > a > h3')[0].children[0].data;
-
-  const content = $('.default > li');
+  const description = $('.inner > p')[0].children[0].data;
+  const image = $('.image > a > img')[0].attribs.src;
   const chapters = [];
+  const content = $('.default > li');
 
   for (let i = 0; i < Object.keys(content).length; i++) {
     try {
-      const data = {
-        ...content[Object.keys(content)[i]].children[0].attribs,
-        category,
-        book,
-        chapter: content[Object.keys(content)[i]].children[0].attribs.title,
-      };
-      await getChapterDetail({ data, chapters });
+      const chapterContent = await getChapterDetail({
+        href: content[Object.keys(content)[i]].children[0].attribs.href,
+      });
+
+      chapters.push({
+        name: content[Object.keys(content)[i]].children[0].attribs.title,
+        content: chapterContent,
+      });
     } catch (error) {}
   }
+
+  all.push({
+    category,
+    book,
+    description,
+    image: `${url}/${image.substring(3)}`,
+    chapters,
+  });
 };
 
 axios(url).then(async (response) => {
@@ -48,11 +66,11 @@ axios(url).then(async (response) => {
 
   for (let i = 0; i < Object.keys(books).length; i++) {
     try {
-      if (Object.keys(books)[i] === '1') {
-        await axios(`${url}/${books[Object.keys(books)[i]].attribs.href}`).then(
-          getBookDetail,
-        );
-      }
+      await axios(`${url}/${books[Object.keys(books)[i]].attribs.href}`).then(
+        getBookDetail,
+      );
     } catch (error) {}
   }
+
+  console.log(JSON.stringify(all));
 });

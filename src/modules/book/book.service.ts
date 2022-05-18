@@ -173,42 +173,46 @@ export class BookService {
   }
 
   async crawl({ data, userId }) {
-    for (let i = 0; i < data.length; i++) {
-      const { book, category, description, chapters, image } = data[i];
+    try {
+      for (let i = 0; i < data.length; i++) {
+        const { book, category, description, chapters, image } = data[i];
 
-      const findCategory = await this.categoryService.getOne({
-        name: category,
-      });
-
-      if (!findCategory) {
-        const newCategory = await this.categoryService.create({
+        const findCategory = await this.categoryService.getOne({
           name: category,
         });
 
-        await this.create({
-          name: book,
-          description,
-          image,
-          releaseStatus: EReleaseStatus.RELEASED,
-          isVisible: true,
-          isVip: false,
-          authorId: userId,
-          categoryIds: [newCategory.id],
-          chapters,
-        });
-      } else {
-        await this.create({
-          name: book,
-          description,
-          image,
-          releaseStatus: EReleaseStatus.RELEASED,
-          isVisible: true,
-          isVip: false,
-          authorId: userId,
-          categoryIds: [findCategory.id],
-          chapters,
-        });
+        if (!findCategory) {
+          const newCategory = await this.categoryService.create({
+            name: category,
+          });
+
+          await this.create({
+            name: book,
+            description,
+            image,
+            releaseStatus: EReleaseStatus.RELEASED,
+            isVisible: true,
+            isVip: false,
+            authorId: userId,
+            categoryIds: [newCategory.id],
+            chapters,
+          });
+        } else {
+          await this.create({
+            name: book,
+            description,
+            image,
+            releaseStatus: EReleaseStatus.RELEASED,
+            isVisible: true,
+            isVip: false,
+            authorId: userId,
+            categoryIds: [findCategory.id],
+            chapters,
+          });
+        }
       }
+    } catch (e) {
+      console.log(e);
     }
   }
 }

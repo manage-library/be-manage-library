@@ -8,8 +8,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(err.status).json({
       statusCode: err.status,
       status: false,
-      context: err.response.context,
-      message: err.response.message,
+      context: err.response?.context,
+      message: err.response?.message,
     });
   }
 }
