@@ -102,6 +102,7 @@ export class BookService {
       .leftJoin('book.chapters', 'chapters')
       .select([
         'book.id',
+        'book.name',
         'chapters.id',
         'chapters.name',
         'chapters.description',
@@ -110,20 +111,18 @@ export class BookService {
       .where('book.id = :bookId', { bookId })
       .getOne();
 
-    let content = '';
-    book.chapters.forEach((chapter) => {
-      content += chapter.name += '\n';
-      content += chapter.content += '\n';
-    });
-
     const pdfBuffer: Buffer = await new Promise((resolve) => {
       const doc = new PDFDocument({
         size: 'LETTER',
         bufferPages: true,
       });
 
+      book.chapters.forEach((chapter) => {
+        doc.text(chapter.name, 100, 50);
+        doc.text(chapter.content, 100, 50);
+      });
+
       // customize your PDF document
-      doc.text(content, 100, 50);
       doc.end();
 
       const buffer = [];
