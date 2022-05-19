@@ -5,6 +5,7 @@ import { HistoryService } from './../history/history.service';
 import { ECensorshipStatus } from './../../common/enums/index';
 import { CategoryRepository } from './../category/category.repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import * as PDFDocument from 'pdfkit';
 import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -93,6 +94,47 @@ export class BookService {
     });
 
     return book;
+  }
+
+  async downloadFile({ userId, bookId }) {
+    const book = await this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoin('book.chapters', 'chapters')
+      .select([
+        'book.id',
+        'chapters.id',
+        'chapters.name',
+        'chapters.description',
+        'chapters.content',
+      ])
+      .where('book.id = :bookId', { bookId })
+      .getOne();
+
+    let content = '';
+    book.chapters.forEach((chapter) => {
+      content += chapter.name += '\n';
+      content += chapter.content += '\n';
+    });
+
+    const pdfBuffer: Buffer = await new Promise((resolve) => {
+      const doc = new PDFDocument({
+        size: 'LETTER',
+        bufferPages: true,
+      });
+
+      // customize your PDF document
+      doc.text(content, 100, 50);
+      doc.end();
+
+      const buffer = [];
+      doc.on('data', buffer.push.bind(buffer));
+      doc.on('end', () => {
+        const data = Buffer.concat(buffer);
+        resolve(data);
+      });
+    });
+
+    return { buffer: pdfBuffer, book: book.name };
   }
 
   async create({

@@ -12,10 +12,11 @@ import {
   Post,
   Put,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @ApiTags('Book')
 @ApiBearerAuth()
@@ -40,6 +41,30 @@ export class BookController {
     const { bookId } = req.params;
 
     return this.bookService.getOne({ bookId, userId });
+  }
+
+  @Get(':bookId/download')
+  @UseGuards(JwtGuard)
+  @ApiParam({
+    name: 'bookId',
+    type: 'number',
+  })
+  async downloadFile(@Req() req: Request, @Res() res: Response) {
+    const userId = req.user.userId;
+    const { bookId } = req.params;
+
+    const { buffer, book } = await this.bookService.downloadFile({
+      userId,
+      bookId,
+    });
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=${book}.pdf`,
+      'Content-Length': buffer.length,
+    });
+
+    res.end(buffer);
   }
 
   @Post()
