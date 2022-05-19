@@ -59,11 +59,6 @@ export class CreateBookRequestDto {
   @Expose()
   image: string;
 
-  @ApiPropertyOptional()
-  @IsString()
-  @Expose()
-  image: string;
-
   @ApiProperty({
     enum: EReleaseStatus,
     default: EReleaseStatus.RELEASING,
