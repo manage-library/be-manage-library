@@ -1,4 +1,5 @@
-import { EReleaseStatus } from '@src/common/enums';
+import { QueryBookDto } from './dto/book.dto';
+import { EReleaseStatus, ESortBy, ESortType } from '@src/common/enums';
 import { CategoryService } from './../category/category.service';
 import { ChapterService } from './../chapter/chapter.service';
 import { HistoryService } from './../history/history.service';
@@ -8,6 +9,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as PDFDocument from 'pdfkit';
 import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
+import { Brackets } from 'typeorm';
 /* eslint-disable @typescript-eslint/no-var-requires */
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -23,8 +25,8 @@ export class BookService {
     private readonly categoryService: CategoryService,
   ) {}
 
-  async getList() {
-    return this.bookRepository
+  async getList({ query }: { query: QueryBookDto }) {
+    const bookQueryBuilder = this.bookRepository
       .createQueryBuilder('book')
       .leftJoin('book.author', 'author')
       .leftJoin('book.bookCategory', 'bookCategory')
@@ -45,8 +47,49 @@ export class BookService {
         'bookCategory.category_id',
         'category.id',
         'category.name',
-      ])
-      .getMany();
+      ]);
+
+    bookQueryBuilder.where(
+      new Brackets((qb) => {
+        if (query.bookName) {
+          qb.where('book.name like :bookName', {
+            bookName: `%${query.bookName || ''}%`,
+          });
+        }
+
+        if (query.authorName) {
+          qb.orWhere('author.full_name like :authorName', {
+            authorName: `%${query.authorName || ''}%`,
+          });
+        }
+      }),
+    );
+
+    if (query.categoryId) {
+      bookQueryBuilder.andWhere('category.id = :categoryId', {
+        categoryId: query.categoryId,
+      });
+    }
+
+    if (query.releaseStatus) {
+      bookQueryBuilder.andWhere('book.release_status = :releaseStatus', {
+        releaseStatus: query.releaseStatus,
+      });
+    }
+
+    if (query.releaseStatus) {
+      bookQueryBuilder.andWhere('book.release_status = :releaseStatus', {
+        releaseStatus: query.releaseStatus,
+      });
+    }
+
+    // if (query.sortBy) {
+    //   if (query.sortBy === ESortBy.LIKE) {
+    //     bookQueryBuilder.orderBy('book.name', query.sortType || 'DESC');
+    //   }
+    // }
+
+    return bookQueryBuilder.getMany();
   }
 
   async getOne({ userId, bookId }) {

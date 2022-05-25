@@ -26,3 +26,14 @@ export enum EGender {
   FEMALE = 2,
   OTHER = 3,
 }
+
+export enum ESortType {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export enum ESortBy {
+  LIKE = 1,
+  VIEW = 2,
+  UPDATE_TIME = 3,
+}

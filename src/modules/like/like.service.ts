@@ -6,7 +6,7 @@ export class LikeService {
   constructor(private readonly likeRepository: LikeRepository) {}
 
   async like({ bookId, userId }) {
-    const like = await this.likeRepository.find({
+    const like = await this.likeRepository.findOne({
       book_id: bookId,
       user_id: userId,
     });

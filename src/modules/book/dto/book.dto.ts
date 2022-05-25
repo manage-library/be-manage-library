@@ -1,7 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ECensorshipStatus, EReleaseStatus } from '@src/common/enums';
+import {
+  ECensorshipStatus,
+  EReleaseStatus,
+  ESortBy,
+  ESortType,
+} from '@src/common/enums';
 import { Exclude, Expose } from 'class-transformer';
-import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 @Exclude()
 export class CreateChapterRequestDto {
@@ -144,4 +157,58 @@ export class CrawlBook {
   @IsArray()
   @Expose()
   data: any;
+}
+
+@Exclude()
+export class QueryBookDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @Expose()
+  bookName: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @Expose()
+  authorName: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Expose()
+  categoryId: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Expose()
+  isVip: boolean;
+
+  @ApiPropertyOptional({
+    type: EReleaseStatus,
+    enum: Object.values(EReleaseStatus),
+  })
+  @IsEnum(EReleaseStatus)
+  @IsOptional()
+  @Expose()
+  releaseStatus: EReleaseStatus;
+
+  @ApiPropertyOptional({
+    type: ESortType,
+    enum: Object.values(ESortType),
+  })
+  @IsOptional()
+  @IsEnum(ESortType)
+  @Expose()
+  sortType: ESortType;
+
+  @ApiPropertyOptional({
+    type: ESortBy,
+    enum: Object.values(ESortBy),
+  })
+  @IsOptional()
+  @IsEnum(ESortBy)
+  @Expose()
+  sortBy: ESortBy;
 }

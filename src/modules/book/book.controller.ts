@@ -1,6 +1,7 @@
 import {
   CrawlBook,
   CreateBookRequestDto,
+  QueryBookDto,
   UpdateBookRequestDto,
 } from './dto/book.dto';
 import { JwtGuard } from './../../guards/jwt.guard';
@@ -11,9 +12,11 @@ import {
   Get,
   Post,
   Put,
+  Query,
   Req,
   Res,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -26,8 +29,16 @@ export class BookController {
 
   @Get()
   @UseGuards(JwtGuard)
-  getList() {
-    return this.bookService.getList();
+  getList(
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    )
+    query: QueryBookDto,
+  ) {
+    return this.bookService.getList({ query });
   }
 
   @Get(':bookId')
