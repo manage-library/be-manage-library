@@ -77,17 +77,33 @@ export class BookService {
       });
     }
 
-    if (query.releaseStatus) {
-      bookQueryBuilder.andWhere('book.release_status = :releaseStatus', {
-        releaseStatus: query.releaseStatus,
+    if (query.isVip) {
+      bookQueryBuilder.andWhere('book.is_vip = :isVip', {
+        isVip: query.isVip,
       });
     }
 
-    // if (query.sortBy) {
-    //   if (query.sortBy === ESortBy.LIKE) {
-    //     bookQueryBuilder.orderBy('book.name', query.sortType || 'DESC');
-    //   }
-    // }
+    if (query.sortBy) {
+      if (query.sortBy === ESortBy.VIEW) {
+        bookQueryBuilder
+          .leftJoin('book.histories', 'histories')
+          .addSelect('COUNT(histories.id) as countView')
+          .groupBy('book.id, bookCategory.category_id')
+          .orderBy('countView', query.sortType || 'DESC');
+      }
+
+      if (query.sortBy === ESortBy.LIKE) {
+        bookQueryBuilder
+          .leftJoin('book.likes', 'likes')
+          .addSelect('COUNT(likes.id) as countLike')
+          .groupBy('book.id, bookCategory.category_id')
+          .orderBy('countLike', query.sortType || 'DESC');
+      }
+
+      if (query.sortBy === ESortBy.UPDATE_TIME) {
+        bookQueryBuilder.orderBy('book.created_at', query.sortType || 'DESC');
+      }
+    }
 
     return bookQueryBuilder.getMany();
   }

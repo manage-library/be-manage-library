@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ToBoolean } from '@src/common/decorators';
 import {
   ECensorshipStatus,
   EReleaseStatus,
@@ -180,6 +181,7 @@ export class QueryBookDto {
   categoryId: number;
 
   @ApiPropertyOptional()
+  @ToBoolean()
   @IsOptional()
   @IsBoolean()
   @Expose()
@@ -195,15 +197,6 @@ export class QueryBookDto {
   releaseStatus: EReleaseStatus;
 
   @ApiPropertyOptional({
-    type: ESortType,
-    enum: Object.values(ESortType),
-  })
-  @IsOptional()
-  @IsEnum(ESortType)
-  @Expose()
-  sortType: ESortType;
-
-  @ApiPropertyOptional({
     type: ESortBy,
     enum: Object.values(ESortBy),
   })
@@ -211,4 +204,13 @@ export class QueryBookDto {
   @IsEnum(ESortBy)
   @Expose()
   sortBy: ESortBy;
+
+  @ApiPropertyOptional({
+    type: ESortType,
+    enum: Object.values(ESortType),
+  })
+  @IsOptional()
+  @IsEnum(ESortType)
+  @Expose()
+  sortType: ESortType;
 }
