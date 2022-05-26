@@ -1,3 +1,4 @@
+import { LikeEntity } from './../like/like.entity';
 import { TransactionEntity } from './../transaction/transaction.entity';
 import { HistoryEntity } from './../history/history.entity';
 import { FavoriteEntity } from './../favorite/favorite.entity';
@@ -34,7 +35,7 @@ export class UserEntity extends BaseEntity {
   @Column('int', { name: 'role_id' })
   role_id: number;
 
-  @Column('boolean', { name: 'vip_id' })
+  @Column('int', { name: 'vip_id' })
   vip_id: number;
 
   @OneToMany(() => BookEntity, (book) => book.author)
@@ -48,6 +49,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => FavoriteEntity, (favorite) => favorite.user)
   favorites: FavoriteEntity[];
+
+  @OneToMany(() => LikeEntity, (like) => like.user)
+  likes: LikeEntity[];
 
   @OneToMany(() => HistoryEntity, (history) => history.user)
   histories: HistoryEntity[];

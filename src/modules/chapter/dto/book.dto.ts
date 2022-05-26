@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ECensorshipStatus, EReleaseStatus } from '@src/common/enums';
+import { EReleaseStatus } from '@src/common/enums';
 import { Exclude, Expose } from 'class-transformer';
 import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
@@ -107,14 +107,6 @@ export class UpdateBookRequestDto {
   })
   @Expose()
   releaseStatus: EReleaseStatus;
-
-  @ApiPropertyOptional({
-    enum: ECensorshipStatus,
-    default: ECensorshipStatus.PENDING,
-    examples: ECensorshipStatus,
-  })
-  @Expose()
-  censorshipStatus: ECensorshipStatus;
 
   @ApiPropertyOptional()
   @IsNotEmpty()

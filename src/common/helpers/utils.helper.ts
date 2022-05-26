@@ -8,3 +8,10 @@ export function randomString(length = 6) {
   }
   return result;
 }
+
+export function removeNullProperty(obj) {
+  const newObject = Object.keys(obj)
+    .filter((k) => obj[k] != null)
+    .reduce((a, k) => ({ ...a, [k]: obj[k] }), {});
+  return newObject;
+}

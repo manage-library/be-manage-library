@@ -3,13 +3,13 @@ import { EReleaseStatus, ESortBy, ESortType } from '@src/common/enums';
 import { CategoryService } from './../category/category.service';
 import { ChapterService } from './../chapter/chapter.service';
 import { HistoryService } from './../history/history.service';
-import { ECensorshipStatus } from './../../common/enums/index';
 import { CategoryRepository } from './../category/category.repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as PDFDocument from 'pdfkit';
 import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
 import { Brackets } from 'typeorm';
+import { removeNullProperty } from '@src/common/helpers/utils.helper';
 /* eslint-disable @typescript-eslint/no-var-requires */
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -217,7 +217,6 @@ export class BookService {
         description,
         image,
         release_status: releaseStatus,
-        censorship_status: ECensorshipStatus.PENDING,
         is_vip: isVip,
         is_visible: isVisible,
         author_id: authorId,
@@ -272,10 +271,12 @@ export class BookService {
     await this.bookRepository.update(
       { id: bookId },
       {
-        name,
-        description,
-        is_visible: isVisible,
-        release_status: releaseStatus,
+        ...removeNullProperty({
+          name,
+          description,
+          is_visible: isVisible,
+          release_status: releaseStatus,
+        }),
       },
     );
   }

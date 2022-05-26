@@ -1,11 +1,16 @@
 import { JwtGuard } from './../../guards/jwt.guard';
-import { UpdateProfileUser, UpdatePasswordUser } from './dtos/user.dto';
+import {
+  UpdateProfileUser,
+  UpdatePasswordUser,
+  QueryUserDto,
+} from './dtos/user.dto';
 import { UserService } from './user.service';
 import {
   Body,
   Controller,
   Get,
   Put,
+  Query,
   Req,
   UseGuards,
   UsePipes,
@@ -20,12 +25,28 @@ import { Request } from 'express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
+  @Get('/profile')
   @UseGuards(JwtGuard)
   getProfile(@Req() req: Request) {
     const userId = req.user.userId;
 
     return this.userService.getProfile({ userId });
+  }
+
+  @Get('/')
+  @UseGuards(JwtGuard)
+  getUsers(@Query() query: QueryUserDto) {
+    return this.userService.getListUser({
+      keySearch: query.keySearch,
+    });
+  }
+
+  @Get('/authors')
+  @UseGuards(JwtGuard)
+  getAuthors(@Query() query: QueryUserDto) {
+    return this.userService.getListAuthor({
+      keySearch: query.keySearch,
+    });
   }
 
   @Put()

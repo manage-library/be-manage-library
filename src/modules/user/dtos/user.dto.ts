@@ -90,3 +90,11 @@ export class UpdatePasswordUser {
   @Expose()
   password: string;
 }
+
+@Exclude()
+export class QueryUserDto {
+  @ApiPropertyOptional()
+  @IsString()
+  @Expose()
+  keySearch: string;
+}
