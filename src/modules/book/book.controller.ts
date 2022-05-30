@@ -30,6 +30,7 @@ export class BookController {
   @Get()
   @UseGuards(JwtGuard)
   getList(
+    @Req() req: Request,
     @Query(
       new ValidationPipe({
         transform: true,
@@ -38,7 +39,8 @@ export class BookController {
     )
     query: QueryBookDto,
   ) {
-    return this.bookService.getList({ query });
+    const userId = req.user.userId;
+    return this.bookService.getList({ query, userId });
   }
 
   @Get(':bookId')

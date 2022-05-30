@@ -25,12 +25,15 @@ export class BookService {
     private readonly categoryService: CategoryService,
   ) {}
 
-  async getList({ query }: { query: QueryBookDto }) {
+  async getList({ query, userId }: { query: QueryBookDto; userId: number }) {
     const bookQueryBuilder = this.bookRepository
       .createQueryBuilder('book')
       .leftJoin('book.author', 'author')
       .leftJoin('book.bookCategory', 'bookCategory')
       .leftJoin('bookCategory.category', 'category')
+      .loadRelationCountAndMap('book.isLike', 'book.likes', 'likes', (qb) =>
+        qb.where('likes.user_id = :userId', { userId }),
+      )
       .loadRelationCountAndMap('book.countChapter', 'book.chapters')
       .loadRelationCountAndMap('book.countView', 'book.histories')
       .loadRelationCountAndMap('book.countLike', 'book.likes')
@@ -115,6 +118,9 @@ export class BookService {
       .leftJoin('book.chapters', 'chapters')
       .leftJoin('book.bookCategory', 'bookCategory')
       .leftJoin('bookCategory.category', 'category')
+      .loadRelationCountAndMap('book.isLike', 'book.likes', 'likes', (qb) =>
+        qb.where('likes.user_id = :userId', { userId }),
+      )
       .loadRelationCountAndMap('book.countChapter', 'book.chapters')
       .loadRelationCountAndMap('book.countView', 'book.histories')
       .loadRelationCountAndMap('book.countLike', 'book.likes')
