@@ -20,6 +20,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { ERole } from '@src/common/enums';
 
 @ApiTags('Book')
 @ApiBearerAuth()
@@ -29,6 +31,7 @@ export class BookController {
 
   @Get()
   @UseGuards(JwtGuard)
+  @Roles([ERole.ADMIN, ERole.USER])
   getList(
     @Req() req: Request,
     @Query(
