@@ -22,16 +22,18 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { ERole } from '@src/common/enums';
+import { RolesGuard } from '@src/guards/role.guard';
 
 @ApiTags('Book')
 @ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get()
-  @UseGuards(JwtGuard)
   @Roles([ERole.ADMIN, ERole.USER])
+  @UseGuards(RolesGuard)
   getList(
     @Req() req: Request,
     @Query(
@@ -47,7 +49,6 @@ export class BookController {
   }
 
   @Get(':bookId')
-  @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -60,7 +61,6 @@ export class BookController {
   }
 
   @Get(':bookId/download')
-  @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -84,7 +84,6 @@ export class BookController {
   }
 
   @Post()
-  @UseGuards(JwtGuard)
   create(@Req() req: Request, @Body() body: CreateBookRequestDto) {
     const userId = req.user.userId;
 
@@ -92,7 +91,6 @@ export class BookController {
   }
 
   @Put(':bookId')
-  @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -104,7 +102,6 @@ export class BookController {
   }
 
   @Post('/crawl')
-  @UseGuards(JwtGuard)
   crawl(@Req() req: Request) {
     const userId = req.user.userId;
     return this.bookService.crawl({ userId });
