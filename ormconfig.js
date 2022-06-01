@@ -11,5 +11,5 @@ module.exports = {
   cli: {
     migrationsDir: 'src/migrations',
   },
-  logging: true,
+  logging: process.env === 'dev',
 };
