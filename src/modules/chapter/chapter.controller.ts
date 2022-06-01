@@ -1,3 +1,4 @@
+import { ERole } from './../../common/enums/index';
 import {
   CreateChapterRequestDto,
   UpdateChapterRequestDto,
@@ -16,15 +17,19 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { RolesGuard } from '@src/guards/role.guard';
+import { Roles } from '@src/common/decorators/roles.decorator';
 
 @ApiTags('Chapter')
 @ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('books/:bookId/chapters')
 export class ChapterController {
   constructor(private readonly chapterService: ChapterService) {}
 
   @Post()
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -37,6 +42,8 @@ export class ChapterController {
 
   @Get(':chapterId')
   @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN, ERole.USER])
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -53,7 +60,8 @@ export class ChapterController {
   }
 
   @Put(':chapterId')
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -69,7 +77,8 @@ export class ChapterController {
   }
 
   @Delete(':chapterId')
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   @ApiParam({
     name: 'bookId',
     type: 'number',

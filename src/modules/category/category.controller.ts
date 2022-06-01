@@ -1,3 +1,4 @@
+import { Roles } from './../../common/decorators/roles.decorator';
 import {
   CreateCategoryRequestDto,
   UpdateCategoryRequestDto,
@@ -16,28 +17,34 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { RolesGuard } from '@src/guards/role.guard';
+import { ERole } from '@src/common/enums';
 
 @ApiTags('Category')
 @ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN, ERole.USER])
   getList() {
     const categories = this.categoryService.getList();
     return categories;
   }
 
   @Post()
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   create(@Req() req: Request, @Body() body: CreateCategoryRequestDto) {
     return this.categoryService.create(body);
   }
 
   @Put(':categoryId')
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   @ApiParam({
     name: 'categoryId',
     type: 'number',
@@ -48,7 +55,8 @@ export class CategoryController {
   }
 
   @Delete(':categoryId')
-  @UseGuards(JwtGuard)
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   @ApiParam({
     name: 'categoryId',
     type: 'number',

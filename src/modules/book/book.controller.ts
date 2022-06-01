@@ -32,8 +32,8 @@ export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get()
-  @Roles([ERole.ADMIN, ERole.USER])
   @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN, ERole.USER])
   getList(
     @Req() req: Request,
     @Query(
@@ -49,6 +49,8 @@ export class BookController {
   }
 
   @Get(':bookId')
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN, ERole.USER])
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -61,6 +63,8 @@ export class BookController {
   }
 
   @Get(':bookId/download')
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN, ERole.USER])
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -84,6 +88,8 @@ export class BookController {
   }
 
   @Post()
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   create(@Req() req: Request, @Body() body: CreateBookRequestDto) {
     const userId = req.user.userId;
 
@@ -91,6 +97,8 @@ export class BookController {
   }
 
   @Put(':bookId')
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -102,6 +110,8 @@ export class BookController {
   }
 
   @Post('/crawl')
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
   crawl(@Req() req: Request) {
     const userId = req.user.userId;
     return this.bookService.crawl({ userId });
