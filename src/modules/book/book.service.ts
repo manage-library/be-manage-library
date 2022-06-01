@@ -6,6 +6,7 @@ import { HistoryService } from './../history/history.service';
 import { CategoryRepository } from './../category/category.repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as PDFDocument from 'pdfkit';
+import { jsPDF } from 'jspdf';
 import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
 import { Brackets } from 'typeorm';
@@ -162,43 +163,61 @@ export class BookService {
   }
 
   async downloadFile({ userId, bookId }) {
-    const book = await this.bookRepository
-      .createQueryBuilder('book')
-      .leftJoin('book.chapters', 'chapters')
-      .select([
-        'book.id',
-        'book.name',
-        'chapters.id',
-        'chapters.name',
-        'chapters.description',
-        'chapters.content',
-      ])
-      .where('book.id = :bookId', { bookId })
-      .getOne();
+    try {
+      const book = await this.bookRepository
+        .createQueryBuilder('book')
+        .leftJoin('book.chapters', 'chapters')
+        .select([
+          'book.id',
+          'book.name',
+          'chapters.id',
+          'chapters.name',
+          'chapters.description',
+          'chapters.content',
+        ])
+        .where('book.id = :bookId', { bookId })
+        .getOne();
 
-    const pdfBuffer: Buffer = await new Promise((resolve) => {
-      const doc = new PDFDocument({
-        size: 'LETTER',
-        bufferPages: true,
+      const pdfBuffer: string = await new Promise((resolve) => {
+        const doc = new jsPDF();
+
+        book.chapters.forEach((chapter, index) => {
+          doc.text(`hello`, 10, index * 10);
+          // doc.text(chapter.content, 10, 10);
+        });
+
+        resolve(doc.output());
+        // const doc = new PDFDocument({
+        //   size: 'LETTER',
+        //   bufferPages: true,
+        //   font: 'Times-Roman',
+        // });
+
+        // book.chapters.forEach((chapter, index) => {
+        //   doc.text(`Chương ${index + 1}: ${chapter.name}`, {
+        //     width: 450,
+        //     align: 'center',
+        //   });
+        //   doc.moveDown();
+        //   doc.text(chapter.content, { width: 450 });
+        //   doc.moveDown();
+        // });
+
+        // doc.end();
+
+        // const buffer = [];
+        // doc.on('data', buffer.push.bind(buffer));
+        // doc.on('end', () => {
+        //   const data = Buffer.concat(buffer);
+        //   resolve(data);
+        // });
       });
 
-      book.chapters.forEach((chapter) => {
-        doc.text(chapter.name, 100, 50);
-        doc.text(chapter.content, 100, 50);
-      });
-
-      // customize your PDF document
-      doc.end();
-
-      const buffer = [];
-      doc.on('data', buffer.push.bind(buffer));
-      doc.on('end', () => {
-        const data = Buffer.concat(buffer);
-        resolve(data);
-      });
-    });
-
-    return { buffer: pdfBuffer, book: book.name };
+      return { buffer: pdfBuffer, book: book.name };
+    } catch (e) {
+      console.log(e);
+      return { buffer: '', book: '' };
+    }
   }
 
   async create({
@@ -323,7 +342,6 @@ export class BookService {
         const content = $('.default > li');
 
         for (let i = 0; i < Object.keys(content).length; i++) {
-          // if (i > 0 && i < 10) {
           try {
             const chapterContent = await getChapterDetail({
               href: content[Object.keys(content)[i]].children[0].attribs.href,
@@ -334,7 +352,6 @@ export class BookService {
               content: chapterContent,
             });
           } catch (error) {}
-          // }
         }
 
         data.push({
@@ -353,7 +370,7 @@ export class BookService {
         const books = $('.box > .image > a');
 
         for (let i = 0; i < Object.keys(books).length; i++) {
-          if (i === 14) {
+          if (i === 0) {
             try {
               await axios(
                 `${url}/${books[Object.keys(books)[i]].attribs.href}`,

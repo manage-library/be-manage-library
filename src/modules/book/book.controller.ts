@@ -78,9 +78,11 @@ export class BookController {
       bookId,
     });
 
+    console.log(buffer);
+
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=${book}.pdf`,
+      'Content-Disposition': `attachment; filename=test.pdf`,
       'Content-Length': buffer.length,
     });
 
