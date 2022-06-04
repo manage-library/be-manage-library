@@ -4,11 +4,17 @@ export enum ERole {
 }
 
 export enum EVip {
-  TYPE_0 = 1,
-  TYPE_1 = 2,
-  TYPE_3 = 3,
-  TYPE_6 = 4,
+  VIP_0 = 0,
+  VIP_1 = 1,
+  VIP_2 = 3,
+  VIP_3 = 6,
 }
+
+export const vipAmount = {
+  1: '99.000',
+  3: '199.000',
+  6: '399.000',
+};
 
 export enum EReleaseStatus {
   RELEASING = 1,

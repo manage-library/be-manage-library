@@ -1,3 +1,4 @@
+import { TransactionModule } from './../transaction/transaction.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -8,7 +9,7 @@ import { UserController } from './user.controller';
 const repositories = [UserRepository];
 
 @Module({
-  imports: [TypeOrmModule.forFeature(repositories)],
+  imports: [TypeOrmModule.forFeature(repositories), TransactionModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [],

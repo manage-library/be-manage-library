@@ -23,6 +23,7 @@ import { Request, Response } from 'express';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { ERole } from '@src/common/enums';
 import { RolesGuard } from '@src/guards/role.guard';
+import { VipGuard } from '@src/guards/vip.guard';
 
 @ApiTags('Book')
 @ApiBearerAuth()
@@ -49,8 +50,8 @@ export class BookController {
   }
 
   @Get(':bookId')
-  @UseGuards(RolesGuard)
   @Roles([ERole.ADMIN, ERole.USER])
+  @UseGuards(RolesGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',

@@ -1,14 +1,16 @@
-import { JwtGuard } from './../../guards/jwt.guard';
+import { JwtGuard } from '@src/guards/jwt.guard';
 import {
   UpdateProfileUser,
   UpdatePasswordUser,
   QueryUserDto,
+  UpgradeVip,
 } from './dtos/user.dto';
 import { UserService } from './user.service';
 import {
   Body,
   Controller,
   Get,
+  Post,
   Put,
   Query,
   Req,
@@ -64,5 +66,14 @@ export class UserController {
     const userId = req.user.userId;
 
     return this.userService.updatePassword({ userId, ...body });
+  }
+
+  @Post('/upgrade-vip')
+  @UseGuards(JwtGuard)
+  upgradeVip(@Req() req: Request, @Body() body: UpgradeVip) {
+    const userId = req.user.userId;
+    const { vipId, status } = body;
+
+    return this.userService.upgradeVip({ userId, vipId, status });
   }
 }

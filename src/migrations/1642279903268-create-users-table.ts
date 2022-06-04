@@ -2,6 +2,7 @@ import { ERole, EVip } from './../common/enums/index';
 import { hashPassword } from './../common/helpers/bcrypt.helper';
 import { UserEntity } from '@src/modules/user/user.entity';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import dayjs from 'dayjs';
 
 export class createUserTable1642276887991 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -57,6 +58,10 @@ export class createUserTable1642276887991 implements MigrationInterface {
             length: '1',
           },
           {
+            name: 'expired_vip_at',
+            type: 'datetime',
+          },
+          {
             name: 'created_at',
             type: 'datetime',
             default: 'CURRENT_TIMESTAMP',
@@ -78,7 +83,8 @@ export class createUserTable1642276887991 implements MigrationInterface {
         password: hash,
         full_name: 'admin',
         role_id: ERole.ADMIN,
-        vip_id: EVip.TYPE_6,
+        vip_id: EVip.VIP_3,
+        expired_vip_at: dayjs().add(6, 'M').format('YYYY-MM-DD'),
         // gender: 1,
         // date_of_birth: '2000/10/17',
         // avatar: '',

@@ -20,9 +20,13 @@ export class createTransactionsTable1651286946838
             type: 'int',
           },
           {
-            name: 'type',
+            name: 'vip_id',
             type: 'int',
             length: '1',
+          },
+          {
+            name: 'amount',
+            type: 'int',
           },
           {
             name: 'status',

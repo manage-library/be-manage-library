@@ -1,3 +1,4 @@
+import { TransactionModule } from './transaction/transaction.module';
 import { CommentModule } from './comment/comment.module';
 import { Module } from '@nestjs/common';
 
@@ -21,6 +22,7 @@ import { FavoriteModule } from './favorite/favorite.module';
     LikeModule,
     FavoriteModule,
     CommentModule,
+    TransactionModule,
   ],
   exports: [],
 })

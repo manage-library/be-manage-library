@@ -19,6 +19,7 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { RolesGuard } from '@src/guards/role.guard';
 import { Roles } from '@src/common/decorators/roles.decorator';
+import { VipGuard } from '@src/guards/vip.guard';
 
 @ApiTags('Chapter')
 @ApiBearerAuth()
@@ -41,9 +42,9 @@ export class ChapterController {
   }
 
   @Get(':chapterId')
-  @UseGuards(JwtGuard)
-  @UseGuards(RolesGuard)
   @Roles([ERole.ADMIN, ERole.USER])
+  @UseGuards(RolesGuard)
+  @UseGuards(VipGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -60,8 +61,8 @@ export class ChapterController {
   }
 
   @Put(':chapterId')
-  @UseGuards(RolesGuard)
   @Roles([ERole.ADMIN])
+  @UseGuards(RolesGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -77,8 +78,8 @@ export class ChapterController {
   }
 
   @Delete(':chapterId')
-  @UseGuards(RolesGuard)
   @Roles([ERole.ADMIN])
+  @UseGuards(RolesGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',

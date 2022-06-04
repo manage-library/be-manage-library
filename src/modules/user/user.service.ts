@@ -1,11 +1,17 @@
+import { TransactionService } from './../transaction/transaction.service';
+import { EVip } from './../../common/enums/index';
 import { hashPassword } from './../../common/helpers/bcrypt.helper';
 import { Injectable } from '@nestjs/common';
 
 import { UserRepository } from '@src/modules/user/user.repository';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly transactionService: TransactionService,
+  ) {}
 
   getProfile({ userId }) {
     return this.userRepository.findOne({
@@ -19,6 +25,7 @@ export class UserService {
         'gender',
         'avatar',
         'date_of_birth',
+        'expired_vip_at',
       ],
     });
   }
@@ -88,5 +95,37 @@ export class UserService {
       .getRawMany();
 
     return authors;
+  }
+
+  async upgradeVip({
+    userId,
+    vipId,
+    status,
+  }: {
+    userId: number;
+    vipId: number;
+    status: boolean;
+  }) {
+    const user = await this.userRepository.findOne({ id: userId });
+
+    try {
+      if (status) {
+        await this.userRepository.save({
+          ...user,
+          vip_id: vipId,
+          expired_vip_at: dayjs(user.expired_vip_at || new Date())
+            .add(vipId, 'M')
+            .format('YYYY-MM-DD'),
+        });
+      }
+
+      await this.transactionService.create({
+        userId,
+        vipId,
+        status,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

@@ -13,11 +13,14 @@ export class TransactionEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id' })
   id: number;
 
-  @Column('int', { name: 'type' })
-  type: number;
+  @Column('int', { name: 'vip_id' })
+  vip_id: number;
 
   @Column('int', { name: 'status' })
   status: number;
+
+  @Column('int', { name: 'amount' })
+  amount: number;
 
   @Column('int', { name: 'user_id' })
   user_id: number;

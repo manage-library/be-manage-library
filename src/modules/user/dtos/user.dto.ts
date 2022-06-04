@@ -1,7 +1,13 @@
-import { EGender } from './../../../common/enums/index';
+import { EGender, EVip } from './../../../common/enums/index';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsDate, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 import { UserEntity } from '@src/modules/user/user.entity';
 
@@ -97,4 +103,20 @@ export class QueryUserDto {
   @IsString()
   @Expose()
   keySearch: string;
+}
+
+@Exclude()
+export class UpgradeVip {
+  @ApiProperty({
+    enum: EVip,
+    default: EVip.VIP_1,
+    examples: EVip,
+  })
+  @IsNotEmpty()
+  vipId: EVip;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsBoolean()
+  status: boolean;
 }

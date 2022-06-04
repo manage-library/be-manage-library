@@ -60,7 +60,7 @@ export class AuthService {
       password: hash,
       full_name: fullName,
       role_id: ERole.USER,
-      vip_id: EVip.TYPE_0,
+      vip_id: EVip.VIP_0,
     });
   }
 }
