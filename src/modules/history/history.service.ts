@@ -6,9 +6,12 @@ export class HistoryService {
   constructor(private readonly historyRepository: HistoryRepository) {}
 
   getList({ userId }) {
-    return this.historyRepository.find({
-      user_id: userId,
-    });
+    return this.historyRepository
+      .createQueryBuilder('history')
+      .leftJoinAndSelect('history.book', 'book')
+      .leftJoinAndSelect('history.chapter', 'chapter')
+      .where('user_id = :userId', { userId })
+      .getMany();
   }
 
   async update({ userId, bookId, chapterId }) {
