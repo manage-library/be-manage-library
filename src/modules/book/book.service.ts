@@ -160,12 +160,6 @@ export class BookService {
       );
     }
 
-    await this.historyService.update({
-      userId,
-      bookId,
-      chapterId: null,
-    });
-
     return book;
   }
 
