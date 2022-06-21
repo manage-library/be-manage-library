@@ -66,6 +66,11 @@ export class CreateBookRequestDto {
   @ApiPropertyOptional()
   @IsString()
   @Expose()
+  authorDescription: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @Expose()
   image: string;
 
   @ApiProperty({
@@ -113,6 +118,11 @@ export class UpdateBookRequestDto {
   @IsString()
   @Expose()
   description: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @Expose()
+  authorDescription: string;
 
   @ApiPropertyOptional()
   @IsString()

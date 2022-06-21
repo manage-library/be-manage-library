@@ -39,6 +39,10 @@ export class createBooksTable1651284841688 implements MigrationInterface {
             type: 'int',
           },
           {
+            name: 'author_description',
+            type: 'longtext',
+          },
+          {
             name: 'author_id',
             type: 'int',
           },

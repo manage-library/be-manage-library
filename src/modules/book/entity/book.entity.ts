@@ -42,6 +42,9 @@ export class BookEntity extends BaseEntity {
   @Column('int', { name: 'author_id' })
   author_id: number;
 
+  @Column('longtext', { name: 'author_description' })
+  author_description: number;
+
   @ManyToOne(() => UserEntity, (user) => user.books)
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author: UserEntity;
