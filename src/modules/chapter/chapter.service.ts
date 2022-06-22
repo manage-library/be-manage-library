@@ -24,13 +24,32 @@ export class ChapterService {
       );
     }
 
+    const nextChap = await this.chapterRepository
+      .createQueryBuilder('chapter')
+      .select('chapter.id')
+      .where(`chapter.id > :id`, { id: chapter.id })
+      .andWhere('chapter.book_id = :bookId', { bookId })
+      .getOne();
+
+    const preChap = await this.chapterRepository
+      .createQueryBuilder('chapter')
+      .select('chapter.id')
+      .where(`chapter.id < :id`, { id: chapter.id })
+      .andWhere('chapter.book_id = :bookId', { bookId })
+      .orderBy('id', 'DESC')
+      .getOne();
+
     await this.historyService.update({
       userId,
       bookId,
       chapterId,
     });
 
-    return chapter;
+    return {
+      ...chapter,
+      preChap: preChap?.id || null,
+      nextChap: nextChap?.id || null,
+    };
   }
 
   async create({ bookId, chapters }) {
