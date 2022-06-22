@@ -1,3 +1,4 @@
+import { RateEntity } from './../rate/rate.entity';
 import { LikeEntity } from './../like/like.entity';
 import { TransactionEntity } from './../transaction/transaction.entity';
 import { HistoryEntity } from './../history/history.entity';
@@ -55,6 +56,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => LikeEntity, (like) => like.user)
   likes: LikeEntity[];
+
+  @OneToMany(() => RateEntity, (rate) => rate.user)
+  rates: RateEntity[];
 
   @OneToMany(() => HistoryEntity, (history) => history.user)
   histories: HistoryEntity[];

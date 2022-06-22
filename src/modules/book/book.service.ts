@@ -31,95 +31,91 @@ export class BookService {
   ) {}
 
   async getList({ query, userId }: { query: QueryBookDto; userId: number }) {
-    try {
-      const bookQueryBuilder = this.bookRepository
-        .createQueryBuilder('book')
-        .leftJoin('book.author', 'author')
-        .leftJoin('book.bookCategory', 'bookCategory')
-        .leftJoin('bookCategory.category', 'category')
-        .loadRelationCountAndMap('book.isLike', 'book.likes', 'likes', (qb) =>
-          qb.where('likes.user_id = :userId', { userId }),
-        )
-        .loadRelationCountAndMap('book.countChapter', 'book.chapters')
-        .loadRelationCountAndMap('book.countView', 'book.histories')
-        .loadRelationCountAndMap('book.countLike', 'book.likes')
-        .loadRelationCountAndMap('book.countDownload', 'book.downloads')
-        .select([
-          'book.id',
-          'book.name',
-          'book.description',
-          'book.author_description',
-          'book.image',
-          'book.is_vip',
-          'book.release_status',
-          'author.id',
-          'author.full_name',
-          'bookCategory.category_id',
-          'category.id',
-          'category.name',
-        ])
-        .where('book.is_visible = :isVisible', { isVisible: true });
+    const bookQueryBuilder = this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoin('book.author', 'author')
+      .leftJoin('book.bookCategory', 'bookCategory')
+      .leftJoin('bookCategory.category', 'category')
+      .loadRelationCountAndMap('book.isLike', 'book.likes', 'likes', (qb) =>
+        qb.where('likes.user_id = :userId', { userId }),
+      )
+      .loadRelationCountAndMap('book.countChapter', 'book.chapters')
+      .loadRelationCountAndMap('book.countView', 'book.histories')
+      .loadRelationCountAndMap('book.countLike', 'book.likes')
+      .loadRelationCountAndMap('book.countDownload', 'book.downloads')
+      .select([
+        'book.id',
+        'book.name',
+        'book.description',
+        'book.author_description',
+        'book.image',
+        'book.is_vip',
+        'book.release_status',
+        'author.id',
+        'author.full_name',
+        'bookCategory.category_id',
+        'category.id',
+        'category.name',
+      ])
+      .where('book.is_visible = :isVisible', { isVisible: true });
 
-      bookQueryBuilder.andWhere(
-        new Brackets((qb) => {
-          if (query.bookName) {
-            qb.where('book.name like :bookName', {
-              bookName: `%${query.bookName || ''}%`,
-            });
-          }
-
-          if (query.authorName) {
-            qb.orWhere('book.author_description like :authorName', {
-              authorName: `%${query.authorName || ''}%`,
-            });
-          }
-        }),
-      );
-
-      if (query.categoryId) {
-        bookQueryBuilder.andWhere('category.id = :categoryId', {
-          categoryId: query.categoryId,
-        });
-      }
-
-      if (query.releaseStatus) {
-        bookQueryBuilder.andWhere('book.release_status = :releaseStatus', {
-          releaseStatus: query.releaseStatus,
-        });
-      }
-
-      if (query.isVip) {
-        bookQueryBuilder.andWhere('book.is_vip = :isVip', {
-          isVip: query.isVip,
-        });
-      }
-
-      if (query.sortBy) {
-        if (query.sortBy === ESortBy.VIEW) {
-          bookQueryBuilder
-            .leftJoin('book.histories', 'histories')
-            .addSelect('COUNT(histories.id) as countView')
-            .groupBy('book.id, bookCategory.category_id')
-            .orderBy('countView', query.sortType || 'DESC');
+    bookQueryBuilder.andWhere(
+      new Brackets((qb) => {
+        if (query.bookName) {
+          qb.where('book.name like :bookName', {
+            bookName: `%${query.bookName || ''}%`,
+          });
         }
 
-        if (query.sortBy === ESortBy.LIKE) {
-          bookQueryBuilder
-            .leftJoin('book.likes', 'likes')
-            .addSelect('COUNT(likes.id) as countLike')
-            .groupBy('book.id, bookCategory.category_id')
-            .orderBy('countLike', query.sortType || 'DESC');
+        if (query.authorName) {
+          qb.orWhere('book.author_description like :authorName', {
+            authorName: `%${query.authorName || ''}%`,
+          });
         }
+      }),
+    );
 
-        if (query.sortBy === ESortBy.UPDATE_TIME) {
-          bookQueryBuilder.orderBy('book.created_at', query.sortType || 'DESC');
-        }
-      }
-
-      return bookQueryBuilder.getMany();
-    } catch (e) {
-      console.log(e);
+    if (query.categoryId) {
+      bookQueryBuilder.andWhere('category.id = :categoryId', {
+        categoryId: query.categoryId,
+      });
     }
+
+    if (query.releaseStatus) {
+      bookQueryBuilder.andWhere('book.release_status = :releaseStatus', {
+        releaseStatus: query.releaseStatus,
+      });
+    }
+
+    if (query.isVip) {
+      bookQueryBuilder.andWhere('book.is_vip = :isVip', {
+        isVip: query.isVip,
+      });
+    }
+
+    if (query.sortBy) {
+      if (query.sortBy === ESortBy.VIEW) {
+        bookQueryBuilder
+          .leftJoin('book.histories', 'histories')
+          .addSelect('COUNT(histories.id) as countView')
+          .groupBy('book.id, bookCategory.category_id')
+          .orderBy('countView', query.sortType || 'DESC');
+      }
+
+      if (query.sortBy === ESortBy.LIKE) {
+        bookQueryBuilder
+          .leftJoin('book.likes', 'likes')
+          .addSelect('COUNT(likes.id) as countLike')
+          .groupBy('book.id, bookCategory.category_id')
+          .orderBy('countLike', query.sortType || 'DESC');
+      }
+
+      if (query.sortBy === ESortBy.UPDATE_TIME) {
+        bookQueryBuilder.orderBy('book.created_at', query.sortType || 'DESC');
+      }
+    }
+
+    return bookQueryBuilder.getMany();
   }
 
   async getOne({ userId, bookId, page = 1, perPage = 20 }) {
