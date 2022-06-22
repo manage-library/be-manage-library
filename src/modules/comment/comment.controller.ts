@@ -1,5 +1,6 @@
+import { JwtGuard } from '@src/guards/jwt.guard';
 import { CommentService } from './comment.service';
-import { Body, Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CommentDto } from './dto/comment.dto';
@@ -10,18 +11,8 @@ import { CommentDto } from './dto/comment.dto';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Get()
-  @ApiParam({
-    name: 'bookId',
-    type: 'number',
-  })
-  getList(@Req() req: Request) {
-    const { bookId } = req.params;
-
-    return this.commentService.getList({ bookId });
-  }
-
   @Post()
+  @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -33,7 +24,20 @@ export class CommentController {
     return this.commentService.create({ ...body, bookId, userId });
   }
 
+  @Get()
+  @UseGuards(JwtGuard)
+  @ApiParam({
+    name: 'bookId',
+    type: 'number',
+  })
+  getList(@Req() req: Request) {
+    const { bookId } = req.params;
+
+    return this.commentService.getList({ bookId });
+  }
+
   @Put(':commentId')
+  @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',
@@ -50,6 +54,7 @@ export class CommentController {
   }
 
   @Delete(':commentId')
+  @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
     type: 'number',

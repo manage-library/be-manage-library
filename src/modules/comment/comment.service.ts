@@ -12,11 +12,16 @@ export class CommentService {
   }
 
   create({ bookId, userId, content }) {
-    return this.commentRepository.save({
-      book_id: bookId,
-      user_id: userId,
-      content,
-    });
+    try {
+      console.log({ bookId, userId, content });
+      return this.commentRepository.save({
+        book_id: bookId,
+        user_id: userId,
+        content,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async update({ bookId, userId, commentId, content }) {

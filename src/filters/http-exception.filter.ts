@@ -5,11 +5,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
-    response.status(err.status).json({
-      statusCode: err.status,
+    response.status(err?.status || 500).json({
+      statusCode: err?.status || 500,
       status: false,
       context: err.response?.context,
-      message: err.response?.message,
+      message: err.response?.message || err.message,
     });
   }
 }

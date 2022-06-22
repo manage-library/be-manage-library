@@ -69,7 +69,7 @@ export class BookService {
           }
 
           if (query.authorName) {
-            qb.orWhere('author.full_name like :authorName', {
+            qb.orWhere('book.author_description like :authorName', {
               authorName: `%${query.authorName || ''}%`,
             });
           }

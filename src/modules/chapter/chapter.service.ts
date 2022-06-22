@@ -32,7 +32,7 @@ export class ChapterService {
       .getOne();
 
     const preChap = await this.chapterRepository
-      .createQueryBuilder('chapter')
+      .createQueryBuilder('chapter') 
       .select('chapter.id')
       .where(`chapter.id < :id`, { id: chapter.id })
       .andWhere('chapter.book_id = :bookId', { bookId })
