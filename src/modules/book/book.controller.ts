@@ -1,3 +1,4 @@
+import { PaginateDto } from './../../dto/paginate';
 import {
   CrawlBook,
   CreateBookRequestDto,
@@ -56,11 +57,11 @@ export class BookController {
     name: 'bookId',
     type: 'number',
   })
-  getOne(@Req() req: Request) {
+  getOne(@Req() req: Request, @Query() { page, perPage }: PaginateDto) {
     const userId = req.user.userId;
     const { bookId } = req.params;
 
-    return this.bookService.getOne({ bookId, userId });
+    return this.bookService.getOne({ bookId, userId, page, perPage });
   }
 
   @Get(':bookId/download')

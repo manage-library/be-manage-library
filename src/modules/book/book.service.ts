@@ -1,3 +1,5 @@
+import { ChapterRepository } from './../chapter/chapter.repository';
+import { ChapterEntity } from '@src/modules/chapter/chapter.entity';
 import { UserEntity } from '@src/modules/user/user.entity';
 import { QueryBookDto } from './dto/book.dto';
 import { EReleaseStatus, ESortBy, ESortType } from '@src/common/enums';
@@ -21,6 +23,7 @@ export class BookService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
     private readonly bookRepository: BookRepository,
+    private readonly chapterRepository: ChapterRepository,
     private readonly bookCategoryRepository: BookCategoryRepository,
     private readonly historyService: HistoryService,
     private readonly chapterService: ChapterService,
@@ -119,11 +122,10 @@ export class BookService {
     }
   }
 
-  async getOne({ userId, bookId }) {
+  async getOne({ userId, bookId, page = 1, perPage = 20 }) {
     const book = await this.bookRepository
       .createQueryBuilder('book')
       .leftJoin('book.author', 'author')
-      .leftJoin('book.chapters', 'chapters')
       .leftJoin('book.bookCategory', 'bookCategory')
       .leftJoin('bookCategory.category', 'category')
       .loadRelationCountAndMap('book.isLike', 'book.likes', 'likes', (qb) =>
@@ -143,8 +145,6 @@ export class BookService {
         'book.release_status',
         'author.id',
         'author.full_name',
-        'chapters.id',
-        'chapters.name',
         'bookCategory.category_id',
         'category.id',
         'category.name',
@@ -152,6 +152,14 @@ export class BookService {
       .where('book.id = :bookId', { bookId })
       .andWhere('book.is_visible = :is_visible', { is_visible: true })
       .getOne();
+
+    const chapters = await this.chapterRepository
+      .createQueryBuilder('chapter')
+      .select(['chapter.id', 'chapter.name', 'chapter.description'])
+      .where('chapter.book_id = :bookId', { bookId })
+      .limit(perPage)
+      .offset(page * perPage - perPage)
+      .getMany();
 
     if (!book) {
       throw new HttpException(
@@ -162,7 +170,7 @@ export class BookService {
       );
     }
 
-    return book;
+    return { ...book, chapters };
   }
 
   async downloadFile({ userId, bookId }) {

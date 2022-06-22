@@ -8,6 +8,7 @@ import { BookCategoryRepository } from './repository/bookCategory.repository';
 import { BookController } from './book.controller';
 import { HistoryModule } from '../history/history.module';
 import { ChapterModule } from '../chapter/chapter.module';
+import { ChapterRepository } from '../chapter/chapter.repository';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ChapterModule } from '../chapter/chapter.module';
       BookRepository,
       BookCategoryRepository,
       CategoryRepository,
+      ChapterRepository,
     ]),
     ChapterModule,
     HistoryModule,
