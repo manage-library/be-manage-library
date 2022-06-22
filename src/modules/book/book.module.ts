@@ -1,3 +1,4 @@
+import { RateRepository } from './../rate/rate.repository';
 import { CategoryModule } from './../category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookService } from './book.service';
@@ -17,6 +18,7 @@ import { ChapterRepository } from '../chapter/chapter.repository';
       BookCategoryRepository,
       CategoryRepository,
       ChapterRepository,
+      RateRepository
     ]),
     ChapterModule,
     HistoryModule,

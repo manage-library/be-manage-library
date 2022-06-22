@@ -1,3 +1,4 @@
+import { RateRepository } from './../rate/rate.repository';
 import { ChapterRepository } from './../chapter/chapter.repository';
 import { ChapterEntity } from '@src/modules/chapter/chapter.entity';
 import { UserEntity } from '@src/modules/user/user.entity';
@@ -28,6 +29,7 @@ export class BookService {
     private readonly historyService: HistoryService,
     private readonly chapterService: ChapterService,
     private readonly categoryService: CategoryService,
+    private readonly rateRepository: RateRepository,
   ) {}
 
   async getList({ query, userId }: { query: QueryBookDto; userId: number }) {
@@ -115,7 +117,29 @@ export class BookService {
       }
     }
 
-    return bookQueryBuilder.getMany();
+    const bookRate = await this.rateRepository
+      .createQueryBuilder('rate')
+      .select([
+        'rate.id',
+        'rate.book_id',
+        'AVG(rate.rate) as rate',
+        'COUNT(rate.id) as count',
+      ])
+      .groupBy('rate.book_id, rate.id')
+      .getRawMany();
+
+    const books = await bookQueryBuilder.getMany();
+
+    return books.map((book) => {
+      const data = bookRate.find((el) => el.rate_book_id === book.id);
+      return {
+        ...book,
+        rate: {
+          value: data?.rate ? Math.round(data?.rate * 100) / 100 : null,
+          count: data?.count || 0,
+        },
+      };
+    });
   }
 
   async getOne({ userId, bookId, page = 1, perPage = 20 }) {
@@ -157,6 +181,18 @@ export class BookService {
       .offset(page * perPage - perPage)
       .getMany();
 
+    const bookRate = await this.rateRepository
+      .createQueryBuilder('rate')
+      .select([
+        'rate.id',
+        'rate.book_id',
+        'AVG(rate.rate) as rate',
+        'COUNT(rate.id) as count',
+      ])
+      .where('rate.book_id = :bookId', { bookId })
+      .groupBy('rate.book_id, rate.id')
+      .getRawOne();
+
     if (!book) {
       throw new HttpException(
         {
@@ -166,7 +202,14 @@ export class BookService {
       );
     }
 
-    return { ...book, chapters };
+    return {
+      ...book,
+      chapters,
+      rate: {
+        value: bookRate?.rate ? Math.round(bookRate?.rate * 100) / 100 : null,
+        count: bookRate?.count || 0,
+      },
+    };
   }
 
   async downloadFile({ userId, bookId }) {
