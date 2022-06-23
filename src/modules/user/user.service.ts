@@ -1,3 +1,4 @@
+import { BookRepository } from './../book/repository/book.repository';
 import { PASSWORD_INCORRECT } from './../../constants/errorContext';
 import { TransactionService } from './../transaction/transaction.service';
 import { EVip } from './../../common/enums/index';
@@ -14,6 +15,7 @@ import * as dayjs from 'dayjs';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly bookRepository: BookRepository,
     private readonly transactionService: TransactionService,
   ) {}
 
@@ -88,30 +90,13 @@ export class UserService {
   }
 
   async getListAuthor({ keySearch }) {
-    const authors = await this.userRepository
-      .createQueryBuilder('user')
-      .innerJoin('user.books', 'books')
-      .leftJoin('books.likes', 'likes')
-      .select([
-        'user.id',
-        'user.full_name',
-        'user.email',
-        'user.avatar',
-        'user.date_of_birth',
-        'user.gender',
-        'user.vip_id',
-        'user.created_at',
-        'COUNT(likes.id) AS countLike',
-      ])
-      .where('user.full_name like :name', {
+    const authors = await this.bookRepository
+      .createQueryBuilder('book')
+      .select(['book.author_description'])
+      .where('book.author_description like :name', {
         name: `%${keySearch || ''}%`,
       })
-      .orWhere('user.email like :email', {
-        email: `%${keySearch || ''}%`,
-      })
-      .groupBy('user.id')
-      .orderBy('countLike', 'DESC')
-      .getRawMany();
+      .getMany();
 
     return authors;
   }
