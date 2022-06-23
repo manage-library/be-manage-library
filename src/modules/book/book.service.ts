@@ -136,7 +136,7 @@ export class BookService {
         ...book,
         rate: {
           value: data?.rate ? Math.round(data?.rate * 100) / 100 : null,
-          count: data?.count || 0,
+          count: data?.count ? Number(data?.count) : 0,
         },
       };
     });
@@ -207,7 +207,7 @@ export class BookService {
       chapters,
       rate: {
         value: bookRate?.rate ? Math.round(bookRate?.rate * 100) / 100 : null,
-        count: bookRate?.count || 0,
+        count: bookRate?.count ? Number(bookRate?.count) : 0,
       },
     };
   }
