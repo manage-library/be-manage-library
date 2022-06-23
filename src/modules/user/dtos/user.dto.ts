@@ -94,6 +94,10 @@ export class UpdateProfileUser {
 export class UpdatePasswordUser {
   @ApiProperty()
   @Expose()
+  oldPassword: string;
+
+  @ApiProperty()
+  @Expose()
   password: string;
 }
 

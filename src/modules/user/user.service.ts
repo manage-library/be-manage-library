@@ -1,7 +1,11 @@
+import { PASSWORD_INCORRECT } from './../../constants/errorContext';
 import { TransactionService } from './../transaction/transaction.service';
 import { EVip } from './../../common/enums/index';
-import { hashPassword } from './../../common/helpers/bcrypt.helper';
-import { Injectable } from '@nestjs/common';
+import {
+  hashPassword,
+  isMatchPassword,
+} from './../../common/helpers/bcrypt.helper';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 import { UserRepository } from '@src/modules/user/user.repository';
 import * as dayjs from 'dayjs';
@@ -37,10 +41,25 @@ export class UserService {
     );
   }
 
-  async updatePassword({ userId, password }) {
-    const hash = await hashPassword(password);
+  async updatePassword({ userId, password, oldPassword }) {
+    const user = await this.userRepository.findOne({ id: userId });
 
-    await this.userRepository.update({ id: userId }, { password: hash });
+    if (user) {
+      if (
+        await isMatchPassword({ password: oldPassword, hash: user.password })
+      ) {
+        const hash = await hashPassword(password);
+
+        await this.userRepository.update({ id: userId }, { password: hash });
+      } else {
+        throw new HttpException(
+          {
+            context: PASSWORD_INCORRECT,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
   }
 
   async getListUser({ keySearch }) {
