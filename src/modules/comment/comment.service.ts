@@ -6,9 +6,12 @@ export class CommentService {
   constructor(private readonly commentRepository: CommentRepository) {}
 
   getList({ bookId }) {
-    return this.commentRepository.find({
-      book_id: bookId,
-    });
+    return this.commentRepository
+      .createQueryBuilder('comment')
+      .leftJoin('comment.user', 'user')
+      .select(['comment.id', 'comment.content', 'user.id', 'user.full_name'])
+      .where('comment.book_id = :bookId', { bookId })
+      .getMany();
   }
 
   create({ bookId, userId, content }) {
