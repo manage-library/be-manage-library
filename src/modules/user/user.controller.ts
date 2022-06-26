@@ -1,9 +1,13 @@
+import { ERole } from '@src/common/enums';
+import { Roles } from '@src/common/decorators/roles.decorator';
+import { RolesGuard } from '@src/guards/role.guard';
 import { JwtGuard } from '@src/guards/jwt.guard';
 import {
   UpdateProfileUser,
   UpdatePasswordUser,
   QueryUserDto,
   UpgradeVip,
+  AdminUpgradeVip,
 } from './dtos/user.dto';
 import { UserService } from './user.service';
 import {
@@ -18,17 +22,17 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
 @ApiTags('User')
 @ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/profile')
-  @UseGuards(JwtGuard)
   getProfile(@Req() req: Request) {
     const userId = req.user.userId;
 
@@ -36,7 +40,6 @@ export class UserController {
   }
 
   @Get('/')
-  @UseGuards(JwtGuard)
   getUsers(@Query() query: QueryUserDto) {
     return this.userService.getListUser({
       keySearch: query.keySearch,
@@ -44,7 +47,6 @@ export class UserController {
   }
 
   @Get('/authors')
-  @UseGuards(JwtGuard)
   getAuthors(@Query() query: QueryUserDto) {
     return this.userService.getListAuthor({
       keySearch: query.keySearch,
@@ -52,7 +54,6 @@ export class UserController {
   }
 
   @Put()
-  @UseGuards(JwtGuard)
   @UsePipes(ValidationPipe)
   updateProfile(@Req() req: Request, @Body() body: UpdateProfileUser) {
     const userId = req.user.userId;
@@ -61,7 +62,6 @@ export class UserController {
   }
 
   @Put('/change-password')
-  @UseGuards(JwtGuard)
   updatePassword(@Req() req: Request, @Body() body: UpdatePasswordUser) {
     const userId = req.user.userId;
 
@@ -69,11 +69,24 @@ export class UserController {
   }
 
   @Post('/upgrade-vip')
-  @UseGuards(JwtGuard)
   upgradeVip(@Req() req: Request, @Body() body: UpgradeVip) {
     const userId = req.user.userId;
     const { vipId, status } = body;
 
     return this.userService.upgradeVip({ userId, vipId, status });
+  }
+
+  @Post(':userId/upgrade-vip')
+  @ApiParam({
+    name: 'userId',
+    type: 'number',
+  })
+  @UseGuards(RolesGuard)
+  @Roles([ERole.ADMIN])
+  adminUpgradeVip(@Req() req: Request, @Body() body: AdminUpgradeVip) {
+    const { userId } = req.params;
+    const { vipId } = body;
+
+    return this.userService.adminUpgradeVip({ vipId, userId });
   }
 }

@@ -144,4 +144,16 @@ export class UserService {
       console.log(e);
     }
   }
+
+  async adminUpgradeVip({ userId, vipId }) {
+    const user = await this.userRepository.findOne({ id: userId });
+
+    await this.userRepository.save({
+      ...user,
+      vip_id: vipId,
+      expired_vip_at: dayjs(user.expired_vip_at || new Date())
+        .add(vipId, 'M')
+        .format('YYYY-MM-DD'),
+    });
+  }
 }

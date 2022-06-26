@@ -132,3 +132,14 @@ export class UpgradeVip {
   @IsBoolean()
   status: boolean;
 }
+
+@Exclude()
+export class AdminUpgradeVip {
+  @ApiProperty({
+    enum: EVip,
+    default: EVip.VIP_1,
+    examples: EVip,
+  })
+  @IsNotEmpty()
+  vipId: EVip;
+}
