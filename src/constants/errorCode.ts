@@ -16,4 +16,6 @@ export const errorCode = {
   USER_NOT_FOUND: 'UserNotFound',
   PHONE_EXISTED: 'PhoneExisted',
   EMAIL_EXISTED: 'EmailExisted',
+
+  BOOK_EXISTED: 'BOOK_EXISTED',
 };

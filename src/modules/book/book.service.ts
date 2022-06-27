@@ -15,6 +15,7 @@ import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
 import { Brackets } from 'typeorm';
 import { removeNullProperty } from '@src/common/helpers/utils.helper';
+import { BOOK_EXISTED } from '@src/constants/errorContext';
 /* eslint-disable @typescript-eslint/no-var-requires */
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -288,13 +289,22 @@ export class BookService {
     isVip,
     authorId,
     categoryIds,
-    chapters,
+    // chapters,
   }) {
     const book = await this.bookRepository.findOne({
       name,
       is_visible: true,
     });
     let newBook: Partial<UserEntity>;
+
+    if (book) {
+      throw new HttpException(
+        {
+          context: BOOK_EXISTED,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     if (!book) {
       newBook = await this.bookRepository.save({
@@ -312,7 +322,7 @@ export class BookService {
     const categories = await this.categoryRepository.findByIds(categoryIds);
 
     if (categoryIds.length !== categories.length) {
-      return new HttpException(
+      throw new HttpException(
         {
           context: '',
         },
@@ -323,14 +333,14 @@ export class BookService {
     await this.bookCategoryRepository.save(
       categoryIds.map((categoryId: number) => ({
         category_id: categoryId,
-        book_id: newBook.id || book.id,
+        book_id: newBook?.id || book.id,
       })),
     );
 
-    await this.chapterService.create({
-      bookId: newBook.id || book.id,
-      chapters,
-    });
+    // await this.chapterService.create({
+    //   bookId: newBook.id || book.id,
+    //   chapters,
+    // });
   }
 
   async update({
@@ -467,7 +477,7 @@ export class BookService {
             isVip: false,
             authorId: userId,
             categoryIds: [newCategory.id],
-            chapters,
+            // chapters,
           });
         } else {
           await this.create({
@@ -480,7 +490,7 @@ export class BookService {
             isVip: false,
             authorId: userId,
             categoryIds: [findCategory.id],
-            chapters,
+            // chapters,
           });
         }
       }

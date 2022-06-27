@@ -100,11 +100,11 @@ export class CreateBookRequestDto {
   @Expose()
   categoryIds: number[];
 
-  @Expose()
-  @ApiProperty({ type: () => [CreateChapterRequestDto] })
-  @IsArray()
-  @Expose()
-  chapters: CreateChapterRequestDto[];
+  // @Expose()
+  // @ApiProperty({ type: () => [CreateChapterRequestDto] })
+  // @IsArray()
+  // @Expose()
+  // chapters: CreateChapterRequestDto[];
 }
 
 @Exclude()
