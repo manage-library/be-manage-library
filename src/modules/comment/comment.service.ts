@@ -9,14 +9,19 @@ export class CommentService {
     return this.commentRepository
       .createQueryBuilder('comment')
       .leftJoin('comment.user', 'user')
-      .select(['comment.id', 'comment.content', 'user.id', 'user.full_name'])
+      .select([
+        'comment.id',
+        'comment.content',
+        'user.id',
+        'user.full_name',
+        'updated_at',
+      ])
       .where('comment.book_id = :bookId', { bookId })
       .getMany();
   }
 
   create({ bookId, userId, content }) {
     try {
-      console.log({ bookId, userId, content });
       return this.commentRepository.save({
         book_id: bookId,
         user_id: userId,

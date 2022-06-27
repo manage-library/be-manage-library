@@ -23,6 +23,9 @@ export class RateEntity extends BaseEntity {
   @Column('int', { name: 'rate' })
   rate: number;
 
+  @Column('varchar', { name: 'content' })
+  content: string;
+
   @ManyToOne(() => BookEntity, (book) => book.likes)
   @JoinColumn({ name: 'book_id', referencedColumnName: 'id' })
   book: BookEntity;

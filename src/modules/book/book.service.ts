@@ -148,6 +148,8 @@ export class BookService {
       .leftJoin('book.author', 'author')
       .leftJoin('book.bookCategory', 'bookCategory')
       .leftJoin('bookCategory.category', 'category')
+      .leftJoin('book.rates', 'rates')
+      .leftJoin('rates.user', 'user')
       .loadRelationCountAndMap('book.isLike', 'book.likes', 'likes', (qb) =>
         qb.where('likes.user_id = :userId', { userId }),
       )
@@ -168,6 +170,12 @@ export class BookService {
         'bookCategory.category_id',
         'category.id',
         'category.name',
+        'rates.id',
+        'rates.rate',
+        'rates.content',
+        'rates.updated_at',
+        'user.id',
+        'user.full_name',
       ])
       .where('book.id = :bookId', { bookId })
       .andWhere('book.is_visible = :is_visible', { is_visible: true })

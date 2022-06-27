@@ -26,6 +26,10 @@ export class createRatesTable1651284993085 implements MigrationInterface {
             type: 'int',
           },
           {
+            name: 'content',
+            type: 'varchar',
+          },
+          {
             name: 'created_at',
             type: 'datetime',
             default: 'CURRENT_TIMESTAMP',

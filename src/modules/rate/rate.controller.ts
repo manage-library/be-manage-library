@@ -1,15 +1,25 @@
 import { JwtGuard } from '../../guards/jwt.guard';
 import { RateService } from './rate.service';
 import { Body, Controller, Delete, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiParam,
+  ApiProperty,
+  ApiTags,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { Request } from 'express';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 class RateDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
   rate: number;
+
+  @ApiPropertyOptional()
+  @IsString()
+  content: string;
 }
 
 @ApiTags('Rate')
@@ -27,8 +37,8 @@ export class RateController {
   create(@Req() req: Request, @Body() body: RateDto) {
     const userId = req.user.userId;
     const { bookId } = req.params;
-    const { rate } = body;
+    const { rate, content } = body;
 
-    return this.rateService.create({ userId, bookId, rate });
+    return this.rateService.create({ userId, bookId, rate, content });
   }
 }

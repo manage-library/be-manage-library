@@ -6,20 +6,21 @@ import { Like } from 'typeorm';
 export class RateService {
   constructor(private readonly rateRepository: RateRepository) {}
 
-  async create({ bookId, userId, rate }) {
+  async create({ bookId, userId, rate, content }) {
     const record = await this.rateRepository.findOne({
       book_id: bookId,
       user_id: userId,
     });
 
     if (record) {
-      return this.rateRepository.save({ ...Like, rate });
+      return this.rateRepository.save({ ...Like, rate, content });
     }
 
     await this.rateRepository.save({
       book_id: bookId,
       user_id: userId,
       rate,
+      content,
     });
   }
 }
