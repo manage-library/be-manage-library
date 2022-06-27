@@ -173,7 +173,7 @@ export class BookService {
         'rates.id',
         'rates.rate',
         'rates.content',
-        'rates.updated_at',
+        'rates.updatedAt',
         'user.id',
         'user.full_name',
       ])

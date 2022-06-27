@@ -14,7 +14,7 @@ export class CommentService {
         'comment.content',
         'user.id',
         'user.full_name',
-        'updated_at',
+        'comment.updatedAt',
       ])
       .where('comment.book_id = :bookId', { bookId })
       .getMany();
