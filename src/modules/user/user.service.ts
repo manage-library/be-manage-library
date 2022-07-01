@@ -163,10 +163,12 @@ export class UserService {
   async uploadAvatar({ userId, file }) {
     const dataBuffer = file.buffer;
     const filename = `${uuid()}-${file.originalname}`;
+    const mimetype = file.mimetype;
 
     await this.fileService.uploadFile({
       dataBuffer,
       filename,
+      mimetype,
     });
 
     await this.userRepository.update(

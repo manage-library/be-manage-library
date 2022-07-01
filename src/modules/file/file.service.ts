@@ -17,15 +17,18 @@ export class FileService {
   async uploadFile({
     dataBuffer,
     filename,
+    mimetype,
   }: {
     dataBuffer: Buffer;
     filename: string;
+    mimetype: string;
   }) {
     await this.s3
       .upload({
         Bucket: this.configService.get('AWS_BUCKET_NAME'),
         Body: dataBuffer,
         Key: filename,
+        ContentType: mimetype,
       })
       .promise();
   }
