@@ -1,3 +1,4 @@
+import { FileModule } from './../file/file.module';
 import { BookRepository } from './../book/repository/book.repository';
 import { TransactionModule } from './../transaction/transaction.module';
 import { Module } from '@nestjs/common';
@@ -10,7 +11,11 @@ import { UserController } from './user.controller';
 const repositories = [UserRepository, BookRepository];
 
 @Module({
-  imports: [TypeOrmModule.forFeature(repositories), TransactionModule],
+  imports: [
+    TypeOrmModule.forFeature(repositories),
+    TransactionModule,
+    FileModule,
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [],

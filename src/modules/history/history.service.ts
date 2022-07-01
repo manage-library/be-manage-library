@@ -8,7 +8,12 @@ export class HistoryService {
   getList({ userId }) {
     return this.historyRepository
       .createQueryBuilder('history')
-      .leftJoinAndSelect('history.book', 'book')
+      .leftJoinAndSelect(
+        'history.book',
+        'book',
+        'book.is_visible = :isVisible',
+        { isVisible: true },
+      )
       .leftJoinAndSelect('history.chapter', 'chapter')
       .where('user_id = :userId', { userId })
       .getMany();

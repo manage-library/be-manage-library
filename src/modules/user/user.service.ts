@@ -11,6 +11,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UserRepository } from '@src/modules/user/user.repository';
 import * as dayjs from 'dayjs';
 import { removeNullProperty } from '@src/common/helpers/utils.helper';
+import { FileService } from '../file/file.service';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -18,6 +20,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly bookRepository: BookRepository,
     private readonly transactionService: TransactionService,
+    private readonly fileService: FileService,
   ) {}
 
   getProfile({ userId }) {
@@ -155,5 +158,22 @@ export class UserService {
         .add(vipId, 'M')
         .format('YYYY-MM-DD'),
     });
+  }
+
+  async uploadAvatar({ userId, file }) {
+    const dataBuffer = file.buffer;
+    const filename = `${uuid()}-${file.originalname}`;
+
+    await this.fileService.uploadFile({
+      dataBuffer,
+      filename,
+    });
+
+    await this.userRepository.update(
+      {
+        id: userId,
+      },
+      { avatar: filename },
+    );
   }
 }
