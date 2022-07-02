@@ -310,7 +310,7 @@ export class BookService {
       newBook = await this.bookRepository.save({
         name,
         description,
-        authorDescription,
+        author_description: authorDescription,
         image,
         release_status: releaseStatus,
         is_vip: isVip,
@@ -371,7 +371,7 @@ export class BookService {
         ...removeNullProperty({
           name,
           description,
-          authorDescription,
+          author_description: authorDescription,
           is_visible: isVisible,
           release_status: releaseStatus,
         }),
