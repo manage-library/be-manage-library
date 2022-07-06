@@ -84,18 +84,6 @@ export class UpdateProfileUser {
     examples: EGender,
   })
   gender: EGender;
-
-  @ApiPropertyOptional()
-  @IsString()
-  avatar: string;
-
-  @ApiProperty({
-    enum: EVip,
-    default: EVip.VIP_1,
-    examples: EVip,
-  })
-  @IsNotEmpty()
-  vipId: EVip;
 }
 
 @Exclude()

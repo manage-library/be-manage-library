@@ -40,19 +40,14 @@ export class UserService {
     });
   }
 
-  updateProfile({ userId, fullName, avatar, dateOfBirth, gender, vipId }) {
+  updateProfile({ userId, fullName, dateOfBirth, gender }) {
     this.userRepository.update(
       { id: userId },
       {
         ...removeNullProperty({
           full_name: fullName,
-          avatar,
           gender,
           date_of_birth: dateOfBirth,
-          vip_id: vipId,
-          expired_vip_at: vipId
-            ? dayjs().add(vipId, 'M').format('YYYY-MM-DD')
-            : null,
         }),
       },
     );
