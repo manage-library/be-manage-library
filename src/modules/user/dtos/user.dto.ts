@@ -74,16 +74,30 @@ export class UpdateProfileUser {
   fullName: string;
 
   @ApiPropertyOptional()
-  @IsDate()
+  @IsString()
   @Expose()
-  dateOfBirth: Date;
+  dateOfBirth: string;
 
   @ApiPropertyOptional({
     enum: EGender,
     default: EGender.FEMALE,
     examples: EGender,
   })
+  @Expose()
   gender: EGender;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @Expose()
+  avatar: string;
+
+  @ApiProperty({
+    enum: EVip,
+    default: EVip.VIP_1,
+    examples: EVip,
+  })
+  @Expose()
+  vipId: EVip;
 }
 
 @Exclude()
