@@ -13,7 +13,7 @@ export class RateService {
     });
 
     if (record) {
-      return this.rateRepository.save({ ...Like, rate, content });
+      return this.rateRepository.save({ ...record, rate, content });
     }
 
     await this.rateRepository.save({
