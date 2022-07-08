@@ -2,7 +2,7 @@ import { ERole, EVip } from './../common/enums/index';
 import { hashPassword } from './../common/helpers/bcrypt.helper';
 import { UserEntity } from '@src/modules/user/user.entity';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 
 export class createUserTable1642276887991 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
