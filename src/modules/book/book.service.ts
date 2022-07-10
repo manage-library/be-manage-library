@@ -84,6 +84,12 @@ export class BookService {
       });
     }
 
+    if (query.categoryName) {
+      bookQueryBuilder.andWhere('category.name = :categoryName', {
+        categoryName: query.categoryName,
+      });
+    }
+
     if (query.releaseStatus) {
       bookQueryBuilder.andWhere('book.release_status = :releaseStatus', {
         releaseStatus: query.releaseStatus,

@@ -178,6 +178,11 @@ export class QueryBookDto {
   categoryId: number;
 
   @ApiPropertyOptional()
+  @IsOptional()
+  @Expose()
+  categoryName: number;
+
+  @ApiPropertyOptional()
   @ToBoolean()
   @IsOptional()
   @IsBoolean()
