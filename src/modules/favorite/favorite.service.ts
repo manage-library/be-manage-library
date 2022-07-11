@@ -12,10 +12,11 @@ export class FavoriteService {
     });
 
     if (favorite) {
-      return await this.favoriteRepository.delete({
+      await this.favoriteRepository.delete({
         book_id: bookId,
         user_id: userId,
       });
+      return;
     }
 
     await this.favoriteRepository.save({

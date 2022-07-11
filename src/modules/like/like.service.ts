@@ -12,12 +12,8 @@ export class LikeService {
     });
 
     if (like) {
-      throw new HttpException(
-        {
-          context: '',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      await this.likeRepository.delete(like);
+      return;
     }
 
     await this.likeRepository.save({

@@ -23,16 +23,16 @@ export class LikeController {
     return this.likeService.like({ userId, bookId });
   }
 
-  @Delete()
-  @UseGuards(JwtGuard)
-  @ApiParam({
-    name: 'bookId',
-    type: 'number',
-  })
-  unlike(@Req() req: Request) {
-    const userId = req.user.userId;
-    const { bookId } = req.params;
+  // @Delete()
+  // @UseGuards(JwtGuard)
+  // @ApiParam({
+  //   name: 'bookId',
+  //   type: 'number',
+  // })
+  // unlike(@Req() req: Request) {
+  //   const userId = req.user.userId;
+  //   const { bookId } = req.params;
 
-    return this.likeService.unLike({ userId, bookId });
-  }
+  //   return this.likeService.unLike({ userId, bookId });
+  // }
 }
