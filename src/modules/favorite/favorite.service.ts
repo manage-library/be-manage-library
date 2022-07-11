@@ -12,12 +12,10 @@ export class FavoriteService {
     });
 
     if (favorite) {
-      throw new HttpException(
-        {
-          context: '',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return await this.favoriteRepository.delete({
+        book_id: bookId,
+        user_id: userId,
+      });
     }
 
     await this.favoriteRepository.save({

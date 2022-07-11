@@ -23,16 +23,16 @@ export class FavoriteController {
     return this.favoriteService.favorite({ userId, bookId });
   }
 
-  @Delete()
-  @UseGuards(JwtGuard)
-  @ApiParam({
-    name: 'bookId',
-    type: 'number',
-  })
-  unFavorite(@Req() req: Request) {
-    const userId = req.user.userId;
-    const { bookId } = req.params;
+  // @Delete()
+  // @UseGuards(JwtGuard)
+  // @ApiParam({
+  //   name: 'bookId',
+  //   type: 'number',
+  // })
+  // unFavorite(@Req() req: Request) {
+  //   const userId = req.user.userId;
+  //   const { bookId } = req.params;
 
-    return this.favoriteService.unFavorite({ userId, bookId });
-  }
+  //   return this.favoriteService.unFavorite({ userId, bookId });
+  // }
 }
