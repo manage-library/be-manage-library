@@ -62,6 +62,16 @@ export class createUserTable1642276887991 implements MigrationInterface {
             type: 'datetime',
           },
           {
+            name: 'code_verify',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'code_expire_at',
+            type: 'datetime',
+            isNullable: true,
+          },
+          {
             name: 'created_at',
             type: 'datetime',
             default: 'CURRENT_TIMESTAMP',

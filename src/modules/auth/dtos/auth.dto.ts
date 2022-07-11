@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 // Login
 @Exclude()
@@ -44,6 +50,35 @@ export class RegisterRequestDto {
   @IsNotEmpty()
   @Expose()
   fullName: string;
+}
+
+@Exclude()
+export class ForgotPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  @Expose()
+  email: string;
+}
+
+export class VerifyForgotPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  @Expose()
+  email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @Expose()
+  code: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @Expose()
+  password: string;
 }
 
 @Exclude()

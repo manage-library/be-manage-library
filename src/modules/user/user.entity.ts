@@ -39,6 +39,12 @@ export class UserEntity extends BaseEntity {
   @Column('int', { name: 'vip_id' })
   vip_id: number;
 
+  @Column('varchar', { name: 'code' })
+  code: string;
+
+  @Column('datetime', { name: 'code_expire_at' })
+  code_expire_at: Date;
+
   @Column('datetime', { name: 'expired_vip_at', nullable: true })
   expired_vip_at: Date;
 
