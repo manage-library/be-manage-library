@@ -10,7 +10,6 @@ import { HistoryService } from './../history/history.service';
 import { CategoryRepository } from './../category/category.repository';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as PDFDocument from 'pdfkit';
-import { jsPDF } from 'jspdf';
 import { BookRepository } from './repository/book.repository';
 import { BookCategoryRepository } from './repository/bookCategory.repository';
 import { Brackets } from 'typeorm';
@@ -243,45 +242,38 @@ export class BookService {
         .where('book.id = :bookId', { bookId })
         .getOne();
 
-      const pdfBuffer: string = await new Promise((resolve) => {
-        const doc = new jsPDF();
-
-        book.chapters.forEach((chapter, index) => {
-          doc.text(`hello`, 10, index * 10);
-          // doc.text(chapter.content, 10, 10);
+      const pdfBuffer: Buffer = await new Promise((resolve) => {
+        const doc = new PDFDocument({
+          size: 'LETTER',
+          bufferPages: true,
+          font: 'src/common/fonts/RobotoSlab-VariableFont_wght.ttf',
         });
 
-        resolve(doc.output());
-        // const doc = new PDFDocument({
-        //   size: 'LETTER',
-        //   bufferPages: true,
-        //   font: 'Times-Roman',
-        // });
+        book.chapters.forEach((chapter, index) => {
+          doc.text(`Chương ${index + 1}: ${chapter.name}`, {
+            width: 450,
+            align: 'center',
+          });
+          doc.moveDown();
+          doc.text(chapter.content, {
+            width: 450,
+          });
+          doc.moveDown();
+        });
 
-        // book.chapters.forEach((chapter, index) => {
-        //   doc.text(`Chương ${index + 1}: ${chapter.name}`, {
-        //     width: 450,
-        //     align: 'center',
-        //   });
-        //   doc.moveDown();
-        //   doc.text(chapter.content, { width: 450 });
-        //   doc.moveDown();
-        // });
+        doc.end();
 
-        // doc.end();
-
-        // const buffer = [];
-        // doc.on('data', buffer.push.bind(buffer));
-        // doc.on('end', () => {
-        //   const data = Buffer.concat(buffer);
-        //   resolve(data);
-        // });
+        const buffer = [];
+        doc.on('data', buffer.push.bind(buffer));
+        doc.on('end', () => {
+          const data = Buffer.concat(buffer);
+          resolve(data);
+        });
       });
 
       return { buffer: pdfBuffer, book: book.name };
     } catch (e) {
       console.log(e);
-      return { buffer: '', book: '' };
     }
   }
 

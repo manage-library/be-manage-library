@@ -80,8 +80,6 @@ export class BookController {
       bookId,
     });
 
-    console.log(buffer);
-
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename=test.pdf`,
