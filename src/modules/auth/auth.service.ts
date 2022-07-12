@@ -51,7 +51,7 @@ export class AuthService {
     if (user) {
       throw new HttpException(
         {
-          context: '',
+          context: 'USER_EXISTS',
         },
         HttpStatus.BAD_REQUEST,
       );

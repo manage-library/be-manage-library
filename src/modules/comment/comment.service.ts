@@ -23,7 +23,7 @@ export class CommentService {
   create({ bookId, userId, content }) {
     try {
       return this.commentRepository.save({
-        book_id: bookId,
+        book_id: Number(bookId),
         user_id: userId,
         content,
       });
@@ -49,7 +49,7 @@ export class CommentService {
     }
 
     return this.commentRepository.update(
-      { id: commentId, user_id: userId, book_id: bookId },
+      { id: commentId, user_id: userId, book_id: Number(bookId) },
       {
         content,
       },
