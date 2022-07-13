@@ -23,14 +23,12 @@ import { Request } from 'express';
 
 @ApiTags('Transaction')
 @ApiBearerAuth()
-@UseGuards(JwtGuard)
 @Controller('transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get()
-  @Roles([ERole.ADMIN])
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtGuard)
   getAllTransaction(
     @Query(
       new ValidationPipe({
@@ -45,6 +43,7 @@ export class TransactionController {
   }
 
   @Post()
+  @UseGuards(JwtGuard)
   createTransaction(@Req() req: Request, @Body() body: CreateTransactionDto) {
     const userId = req.user.userId;
     const { vipId } = body;
@@ -56,6 +55,6 @@ export class TransactionController {
   payment(@Req() req: Request, @Body() body: RechargeDto) {
     const { comment, signature } = body;
 
-    this.transactionService.recharge({ code: comment, signature });
+    return this.transactionService.recharge({ code: comment, signature });
   }
 }
