@@ -46,12 +46,7 @@ export class TransactionService {
 
   async recharge({ code, signature }) {
     if (signature !== process.env.SIGNATURE) {
-      throw new HttpException(
-        {
-          context: AUTH_FAILED,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return;
     }
 
     const transaction = await this.transactionRepository.findOne({
@@ -60,23 +55,13 @@ export class TransactionService {
     });
 
     if (!transaction) {
-      throw new HttpException(
-        {
-          context: 'TRANSACTION_NOT_EXIST',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return;
     }
 
     const user = await this.userRepository.findOne({ id: transaction.user_id });
 
     if (!user) {
-      throw new HttpException(
-        {
-          context: 'USER_NOT_EXIST',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return;
     }
 
     await this.userRepository.save({

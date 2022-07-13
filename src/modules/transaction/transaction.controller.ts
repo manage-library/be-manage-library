@@ -12,6 +12,7 @@ import {
   Post,
   Query,
   Req,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,7 +20,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@src/common/decorators/roles.decorator';
 import { ERole } from '@src/common/enums';
 import { TransactionService } from './transaction.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @ApiTags('Transaction')
 @ApiBearerAuth()
@@ -52,9 +53,14 @@ export class TransactionController {
   }
 
   @Post('payment-bill')
-  payment(@Req() req: Request, @Body() body: RechargeDto) {
+  async payment(
+    @Req() req: Request,
+    @Body() body: RechargeDto,
+    @Res() res: Response,
+  ) {
     const { comment, signature } = body;
 
-    return this.transactionService.recharge({ code: comment, signature });
+    await this.transactionService.recharge({ code: comment, signature });
+    res.status(200);
   }
 }
