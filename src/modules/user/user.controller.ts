@@ -77,13 +77,13 @@ export class UserController {
     return this.userService.updatePassword({ userId, ...body });
   }
 
-  @Post('/upgrade-vip')
-  upgradeVip(@Req() req: Request, @Body() body: UpgradeVip) {
-    const userId = req.user.userId;
-    const { vipId, status } = body;
+  // @Post('/upgrade-vip')
+  // upgradeVip(@Req() req: Request, @Body() body: UpgradeVip) {
+  //   const userId = req.user.userId;
+  //   const { vipId, status } = body;
 
-    return this.userService.upgradeVip({ userId, vipId, status });
-  }
+  //   return this.userService.upgradeVip({ userId, vipId, status });
+  // }
 
   @Post(':userId/upgrade-vip')
   @ApiParam({

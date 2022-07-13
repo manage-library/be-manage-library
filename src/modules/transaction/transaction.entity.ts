@@ -22,6 +22,9 @@ export class TransactionEntity extends BaseEntity {
   @Column('int', { name: 'amount' })
   amount: number;
 
+  @Column('varchar', { name: 'code' })
+  code: string;
+
   @Column('int', { name: 'user_id' })
   user_id: number;
 

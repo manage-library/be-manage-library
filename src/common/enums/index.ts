@@ -43,3 +43,9 @@ export enum ESortBy {
   VIEW = 2,
   UPDATE_TIME = 3,
 }
+
+export enum ECTransactionStatus {
+  PENDING = 1,
+  APPROVED = 2,
+  REJECTED = 3,
+}

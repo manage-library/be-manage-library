@@ -116,37 +116,37 @@ export class UserService {
     return authors;
   }
 
-  async upgradeVip({
-    userId,
-    vipId,
-    status,
-  }: {
-    userId: number;
-    vipId: number;
-    status: boolean;
-  }) {
-    const user = await this.userRepository.findOne({ id: userId });
+  // async upgradeVip({
+  //   userId,
+  //   vipId,
+  //   status,
+  // }: {
+  //   userId: number;
+  //   vipId: number;
+  //   status: boolean;
+  // }) {
+  //   const user = await this.userRepository.findOne({ id: userId });
 
-    try {
-      if (status) {
-        await this.userRepository.save({
-          ...user,
-          vip_id: vipId,
-          expired_vip_at: dayjs(user.expired_vip_at || new Date())
-            .add(vipId, 'M')
-            .format('YYYY-MM-DD'),
-        });
-      }
+  //   try {
+  //     if (status) {
+  //       await this.userRepository.save({
+  //         ...user,
+  //         vip_id: vipId,
+  //         expired_vip_at: dayjs(user.expired_vip_at || new Date())
+  //           .add(vipId, 'M')
+  //           .format('YYYY-MM-DD'),
+  //       });
+  //     }
 
-      await this.transactionService.create({
-        userId,
-        vipId,
-        status,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  //     await this.transactionService.create({
+  //       userId,
+  //       vipId,
+  //       status,
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   async adminUpgradeVip({ userId, vipId }) {
     const user = await this.userRepository.findOne({ id: userId });

@@ -1,10 +1,17 @@
-import { vipAmount } from './../../common/enums/index';
-import { Injectable } from '@nestjs/common';
+import { ECTransactionStatus, vipAmount } from './../../common/enums/index';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { TransactionRepository } from './transaction.repository';
+import { AUTH_FAILED } from '@src/constants/errorContext';
+import { UserRepository } from '../user/user.repository';
+import * as dayjs from 'dayjs';
+import { randomString } from '@src/common/helpers/utils.helper';
 
 @Injectable()
 export class TransactionService {
-  constructor(private readonly transactionRepository: TransactionRepository) {}
+  constructor(
+    private readonly transactionRepository: TransactionRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   getAll({ userId, status, vipId }) {
     const transaction =
@@ -25,12 +32,64 @@ export class TransactionService {
     return transaction.getMany();
   }
 
-  create({ userId, vipId, status }) {
+  create({ userId, vipId }) {
+    const code = randomString(12);
+
     return this.transactionRepository.save({
       user_id: userId,
       vip_id: vipId,
       amount: vipAmount[vipId],
-      status,
+      code,
+      status: ECTransactionStatus.PENDING,
+    });
+  }
+
+  async recharge({ code, signature }) {
+    if (signature !== process.env.SIGNATURE) {
+      throw new HttpException(
+        {
+          context: AUTH_FAILED,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const transaction = await this.transactionRepository.findOne({
+      code,
+      status: ECTransactionStatus.PENDING,
+    });
+
+    if (!transaction) {
+      throw new HttpException(
+        {
+          context: 'TRANSACTION_NOT_EXIST',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const user = await this.userRepository.findOne({ id: transaction.user_id });
+
+    if (!user) {
+      throw new HttpException(
+        {
+          context: 'USER_NOT_EXIST',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.userRepository.save({
+      ...user,
+      vip_id: transaction.vip_id,
+      expired_vip_at: dayjs(user.expired_vip_at || new Date())
+        .add(transaction.vip_id, 'M')
+        .format('YYYY-MM-DD'),
+    });
+
+    await this.transactionRepository.save({
+      ...transaction,
+      status: ECTransactionStatus.APPROVED,
     });
   }
 }

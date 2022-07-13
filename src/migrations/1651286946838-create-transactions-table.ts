@@ -34,6 +34,10 @@ export class createTransactionsTable1651286946838
             length: '1',
           },
           {
+            name: 'code',
+            type: 'varchar',
+          },
+          {
             name: 'created_at',
             type: 'datetime',
             default: 'CURRENT_TIMESTAMP',
