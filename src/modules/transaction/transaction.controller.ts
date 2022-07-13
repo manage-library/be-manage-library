@@ -61,6 +61,6 @@ export class TransactionController {
     const { comment, signature } = body;
 
     await this.transactionService.recharge({ code: comment, signature });
-    res.status(200);
+    res.status(200).json();
   }
 }
