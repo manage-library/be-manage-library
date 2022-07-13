@@ -50,7 +50,7 @@ export class TransactionService {
     }
 
     const transaction = await this.transactionRepository.findOne({
-      code,
+      code: code.split('bk-')[1],
       status: ECTransactionStatus.PENDING,
     });
 
