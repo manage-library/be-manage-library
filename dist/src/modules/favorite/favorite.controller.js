@@ -26,6 +26,10 @@ let FavoriteController = class FavoriteController {
         const { bookId } = req.params;
         return this.favoriteService.favorite({ userId, bookId });
     }
+    getList(req) {
+        const userId = req.user.userId;
+        return this.favoriteService.getList({ userId });
+    }
     unFavorite(req) {
         const userId = req.user.userId;
         const { bookId } = req.params;
@@ -33,7 +37,7 @@ let FavoriteController = class FavoriteController {
     }
 };
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('books/:bookId/favorite'),
     (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
     (0, swagger_1.ApiParam)({
         name: 'bookId',
@@ -45,7 +49,15 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], FavoriteController.prototype, "favorite", null);
 __decorate([
-    (0, common_1.Delete)(),
+    (0, common_1.Get)('/favorites'),
+    (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], FavoriteController.prototype, "getList", null);
+__decorate([
+    (0, common_1.Delete)('books/:bookId/favorite'),
     (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
     (0, swagger_1.ApiParam)({
         name: 'bookId',
@@ -59,7 +71,7 @@ __decorate([
 FavoriteController = __decorate([
     (0, swagger_1.ApiTags)('Favorite'),
     (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.Controller)('books/:bookId/favorite'),
+    (0, common_1.Controller)(),
     __metadata("design:paramtypes", [favorite_service_1.FavoriteService])
 ], FavoriteController);
 exports.FavoriteController = FavoriteController;

@@ -17,7 +17,7 @@ let FavoriteService = class FavoriteService {
         this.favoriteRepository = favoriteRepository;
     }
     async favorite({ bookId, userId }) {
-        const favorite = await this.favoriteRepository.find({
+        const favorite = await this.favoriteRepository.findOne({
             book_id: bookId,
             user_id: userId,
         });
@@ -30,6 +30,14 @@ let FavoriteService = class FavoriteService {
             book_id: bookId,
             user_id: userId,
         });
+    }
+    async getList({ userId }) {
+        const favorite = await this.favoriteRepository
+            .createQueryBuilder('favorite')
+            .where('favorite.user_id = :userId', { userId })
+            .leftJoinAndSelect('favorite.book', 'book')
+            .getMany();
+        return favorite;
     }
     async unFavorite({ bookId, userId }) {
         const favorite = await this.favoriteRepository.findOne({

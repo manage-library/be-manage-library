@@ -1,16 +1,16 @@
 import { FavoriteService } from './favorite.service';
 import { JwtGuard } from './../../guards/jwt.guard';
-import { Controller, Delete, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
 @ApiTags('Favorite')
 @ApiBearerAuth()
-@Controller('books/:bookId/favorite')
+@Controller()
 export class FavoriteController {
   constructor(private readonly favoriteService: FavoriteService) {}
 
-  @Post()
+  @Post('books/:bookId/favorite')
   @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',
@@ -23,7 +23,15 @@ export class FavoriteController {
     return this.favoriteService.favorite({ userId, bookId });
   }
 
-  @Delete()
+  @Get('/favorites')
+  @UseGuards(JwtGuard)
+  getList(@Req() req: Request) {
+    const userId = req.user.userId;
+
+    return this.favoriteService.getList({ userId });
+  }
+
+  @Delete('books/:bookId/favorite')
   @UseGuards(JwtGuard)
   @ApiParam({
     name: 'bookId',

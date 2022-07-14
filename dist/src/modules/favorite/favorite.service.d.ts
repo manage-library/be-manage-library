@@ -6,6 +6,9 @@ export declare class FavoriteService {
         bookId: any;
         userId: any;
     }): Promise<void>;
+    getList({ userId }: {
+        userId: any;
+    }): Promise<import("./favorite.entity").FavoriteEntity[]>;
     unFavorite({ bookId, userId }: {
         bookId: any;
         userId: any;
