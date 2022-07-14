@@ -16,13 +16,13 @@ const class_validator_1 = require("class-validator");
 let PaginateDto = class PaginateDto {
 };
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
+    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_transformer_1.Expose)(),
     __metadata("design:type", Number)
 ], PaginateDto.prototype, "page", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
+    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_transformer_1.Expose)(),
     __metadata("design:type", Number)

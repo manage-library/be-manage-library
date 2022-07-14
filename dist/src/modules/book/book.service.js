@@ -114,6 +114,13 @@ let BookService = class BookService {
                 bookQueryBuilder.orderBy('book.created_at', query.sortType || 'DESC');
             }
         }
+        const bookQuery1 = bookQueryBuilder;
+        const bookQuery2 = bookQueryBuilder;
+        const books = await bookQuery1
+            .limit(query.perPage)
+            .offset(query.page * query.perPage - query.perPage)
+            .getMany();
+        const total = await bookQuery2.getCount();
         const bookRate = await this.rateRepository
             .createQueryBuilder('rate')
             .select([
@@ -124,17 +131,19 @@ let BookService = class BookService {
         ])
             .groupBy('rate.book_id, rate.id')
             .getRawMany();
-        const books = await bookQueryBuilder.getMany();
-        return books.map((book) => {
-            const data = bookRate.find((el) => el.rate_book_id === book.id);
-            return {
-                ...book,
-                rate: {
-                    value: data?.rate ? Math.round(data?.rate * 10) / 10 : null,
-                    count: data?.count ? Number(data?.count) : 0,
-                },
-            };
-        });
+        return {
+            books: books.map((book) => {
+                const data = bookRate.find((el) => el.rate_book_id === book.id);
+                return {
+                    ...book,
+                    rate: {
+                        value: data?.rate ? Math.round(data?.rate * 10) / 10 : null,
+                        count: data?.count ? Number(data?.count) : 0,
+                    },
+                };
+            }),
+            total,
+        };
     }
     async getOne({ userId, bookId, page = 1, perPage = 20 }) {
         const book = await this.bookRepository

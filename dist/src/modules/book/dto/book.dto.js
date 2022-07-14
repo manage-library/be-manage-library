@@ -13,6 +13,7 @@ exports.QueryBookDto = exports.CrawlBook = exports.UpdateBookRequestDto = export
 const swagger_1 = require("@nestjs/swagger");
 const decorators_1 = require("../../../common/decorators");
 const enums_1 = require("../../../common/enums");
+const paginate_1 = require("../../../dto/paginate");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 let CreateChapterRequestDto = class CreateChapterRequestDto {
@@ -191,7 +192,7 @@ CrawlBook = __decorate([
     (0, class_transformer_1.Exclude)()
 ], CrawlBook);
 exports.CrawlBook = CrawlBook;
-let QueryBookDto = class QueryBookDto {
+let QueryBookDto = class QueryBookDto extends paginate_1.PaginateDto {
 };
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),

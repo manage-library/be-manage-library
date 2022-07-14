@@ -6,31 +6,34 @@ export declare class BookController {
     private readonly bookService;
     constructor(bookService: BookService);
     getList(req: Request, query: QueryBookDto): Promise<{
-        rate: {
-            value: number;
-            count: number;
-        };
-        id: number;
-        name: string;
-        description: string;
-        image: string;
-        is_vip: boolean;
-        is_visible: boolean;
-        release_status: number;
-        author_id: number;
-        author_description: number;
-        author: import("../user/user.entity").UserEntity;
-        bookCategory: import("./entity/bookCategory.entity").BookCategoryEntity[];
-        chapters: import("../chapter/chapter.entity").ChapterEntity[];
-        comments: import("../comment/comment.entity").CommentEntity[];
-        downloads: import("../download/download.entity").DownloadEntity[];
-        favorites: import("../favorite/favorite.entity").FavoriteEntity[];
-        likes: import("../like/like.entity").LikeEntity[];
-        rates: import("../rate/rate.entity").RateEntity[];
-        histories: import("../history/history.entity").HistoryEntity[];
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
+        books: {
+            rate: {
+                value: number;
+                count: number;
+            };
+            id: number;
+            name: string;
+            description: string;
+            image: string;
+            is_vip: boolean;
+            is_visible: boolean;
+            release_status: number;
+            author_id: number;
+            author_description: number;
+            author: import("../user/user.entity").UserEntity;
+            bookCategory: import("./entity/bookCategory.entity").BookCategoryEntity[];
+            chapters: import("../chapter/chapter.entity").ChapterEntity[];
+            comments: import("../comment/comment.entity").CommentEntity[];
+            downloads: import("../download/download.entity").DownloadEntity[];
+            favorites: import("../favorite/favorite.entity").FavoriteEntity[];
+            likes: import("../like/like.entity").LikeEntity[];
+            rates: import("../rate/rate.entity").RateEntity[];
+            histories: import("../history/history.entity").HistoryEntity[];
+            createdAt: Date;
+            updatedAt: Date;
+        }[];
+        total: number;
+    }>;
     getOne(req: Request, { page, perPage }: PaginateDto): Promise<{
         chapters: import("../chapter/chapter.entity").ChapterEntity[];
         rate: {

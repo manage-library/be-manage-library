@@ -23,31 +23,34 @@ export declare class BookService {
         query: QueryBookDto;
         userId: number;
     }): Promise<{
-        rate: {
-            value: number;
-            count: number;
-        };
-        id: number;
-        name: string;
-        description: string;
-        image: string;
-        is_vip: boolean;
-        is_visible: boolean;
-        release_status: number;
-        author_id: number;
-        author_description: number;
-        author: UserEntity;
-        bookCategory: import("./entity/bookCategory.entity").BookCategoryEntity[];
-        chapters: ChapterEntity[];
-        comments: import("../comment/comment.entity").CommentEntity[];
-        downloads: import("../download/download.entity").DownloadEntity[];
-        favorites: import("../favorite/favorite.entity").FavoriteEntity[];
-        likes: import("../like/like.entity").LikeEntity[];
-        rates: import("../rate/rate.entity").RateEntity[];
-        histories: import("../history/history.entity").HistoryEntity[];
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
+        books: {
+            rate: {
+                value: number;
+                count: number;
+            };
+            id: number;
+            name: string;
+            description: string;
+            image: string;
+            is_vip: boolean;
+            is_visible: boolean;
+            release_status: number;
+            author_id: number;
+            author_description: number;
+            author: UserEntity;
+            bookCategory: import("./entity/bookCategory.entity").BookCategoryEntity[];
+            chapters: ChapterEntity[];
+            comments: import("../comment/comment.entity").CommentEntity[];
+            downloads: import("../download/download.entity").DownloadEntity[];
+            favorites: import("../favorite/favorite.entity").FavoriteEntity[];
+            likes: import("../like/like.entity").LikeEntity[];
+            rates: import("../rate/rate.entity").RateEntity[];
+            histories: import("../history/history.entity").HistoryEntity[];
+            createdAt: Date;
+            updatedAt: Date;
+        }[];
+        total: number;
+    }>;
     getOne({ userId, bookId, page, perPage }: {
         userId: any;
         bookId: any;

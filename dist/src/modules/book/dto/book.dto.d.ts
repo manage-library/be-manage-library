@@ -1,4 +1,5 @@
 import { EReleaseStatus, ESortBy, ESortType } from '@src/common/enums';
+import { PaginateDto } from '@src/dto/paginate';
 export declare class CreateChapterRequestDto {
     name: string;
     description: string;
@@ -31,7 +32,7 @@ export declare class UpdateBookRequestDto {
 export declare class CrawlBook {
     data: any;
 }
-export declare class QueryBookDto {
+export declare class QueryBookDto extends PaginateDto {
     bookName: string;
     authorName: string;
     categoryId: number;

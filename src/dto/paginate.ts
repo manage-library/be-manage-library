@@ -4,13 +4,13 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @Exclude()
 export class PaginateDto {
-  @ApiPropertyOptional()
+  @ApiProperty()
   @IsNumber()
   @Expose()
-  page?: number;
+  page: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   @IsNumber()
   @Expose()
-  perPage?: number;
+  perPage: number;
 }

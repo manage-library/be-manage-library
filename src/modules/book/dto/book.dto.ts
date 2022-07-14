@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ToBoolean } from '@src/common/decorators';
 import { EReleaseStatus, ESortBy, ESortType } from '@src/common/enums';
+import { PaginateDto } from '@src/dto/paginate';
 import { Exclude, Expose } from 'class-transformer';
 import {
   IsArray,
@@ -158,7 +159,7 @@ export class CrawlBook {
 }
 
 @Exclude()
-export class QueryBookDto {
+export class QueryBookDto extends PaginateDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
