@@ -9,7 +9,7 @@ import {
   isMatchPassword,
 } from './../../common/helpers/bcrypt.helper';
 import { ERole, EVip } from '../../common/enums';
-import { randomString } from '@src/common/helpers/utils.helper';
+import { randomNumber, randomString } from '@src/common/helpers/utils.helper';
 import * as dayjs from 'dayjs';
 import { NodeMailerService } from '../nodemailer/nodemailer.service';
 
@@ -82,7 +82,7 @@ export class AuthService {
       );
     }
 
-    const code = randomString(6);
+    const code = randomNumber(6);
 
     await this.userRepository.save({
       ...user,

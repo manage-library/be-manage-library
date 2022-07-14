@@ -65,7 +65,7 @@ let AuthService = class AuthService {
                 context: 'USER_NOT_EXIST',
             }, common_1.HttpStatus.BAD_REQUEST);
         }
-        const code = (0, utils_helper_1.randomString)(6);
+        const code = (0, utils_helper_1.randomNumber)(6);
         await this.userRepository.save({
             ...user,
             code,
