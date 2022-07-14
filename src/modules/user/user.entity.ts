@@ -33,6 +33,12 @@ export class UserEntity extends BaseEntity {
   @Column('varchar', { name: 'avatar', nullable: true })
   avatar: string;
 
+  @Column('varchar', { name: 'code', nullable: true })
+  code: string;
+
+  @Column('datetime', { name: 'code_expire_at', nullable: true })
+  code_expire_at: Date;
+
   @Column('int', { name: 'role_id' })
   role_id: number;
 

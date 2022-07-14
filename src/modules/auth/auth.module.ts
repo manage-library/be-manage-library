@@ -1,3 +1,4 @@
+import { NodeMailModule } from './../nodemailer/nodemailer.module';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
@@ -25,6 +26,7 @@ const repositories = [UserRepository];
         signOptions: { expiresIn: configService.get(ACCESS_TOKEN_SECRET) },
       }),
     }),
+    NodeMailModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtGuard],

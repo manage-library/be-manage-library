@@ -47,4 +47,32 @@ export class RegisterRequestDto {
 }
 
 @Exclude()
+export class ForgotPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  @Expose()
+  email: string;
+}
+
+@Exclude()
+export class VerifyForgotPasswordDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  @Expose()
+  email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @Expose()
+  code: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @Expose()
+  password: string;
+}
+
+@Exclude()
 export class registerResponseDto {}
