@@ -137,4 +137,8 @@ export class AuthService {
       code_expire_at: null,
     });
   }
+
+  getToken () {
+    return 
+  }
 }
