@@ -49,3 +49,14 @@ export enum ECTransactionStatus {
   APPROVED = 2,
   REJECTED = 3,
 }
+
+export enum LogLevel {
+  Emerg = 'emerg',
+  Alert = 'alert',
+  Crit = 'crit',
+  Error = 'error',
+  Warning = 'warning',
+  Notice = 'notice',
+  Info = 'info',
+  Debug = 'debug',
+}

@@ -7,7 +7,7 @@ import { envValidate } from './env.validation';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env.production', '.env.development'], // If a variable is found in multiple files, the first one takes precedence.
+      envFilePath: ['.env'], // If a variable is found in multiple files, the first one takes precedence.
       validate: envValidate,
       ignoreEnvFile: true,
     }),

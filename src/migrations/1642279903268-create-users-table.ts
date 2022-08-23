@@ -60,14 +60,17 @@ export class createUserTable1642276887991 implements MigrationInterface {
           {
             name: 'expired_vip_at',
             type: 'datetime',
+            isNullable: true,
           },
           {
             name: 'code',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'code_expired_at',
             type: 'datetime',
+            isNullable: true,
           },
           {
             name: 'created_at',
