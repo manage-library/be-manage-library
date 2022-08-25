@@ -20,7 +20,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - npm run test
+      - run: npm run test
     needs: [lint]
 
   # build:
