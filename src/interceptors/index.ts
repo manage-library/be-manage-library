@@ -32,26 +32,7 @@ export class TransformInterceptor<T>
 
     return next.handle().pipe(
       map((data) => {
-        const requestLog = {
-          title: `HTTP request - ${request.correlationId}`,
-          message: `HTTP request - ${request.correlationId}`,
-          timestamp: new Date().toISOString(),
-          correlationId: request.correlationId,
-          level: LogLevel.Debug,
-          method: request.method,
-          statusCode: response.statusCode,
-          originalUri: request.originalUrl,
-          uri: request.url,
-          request: {
-            params: request.params,
-            query: request.query,
-            body: request.body,
-            headers: request.headers,
-          },
-          response: data,
-        };
-
-        this.logger.log(requestLog);
+        this.logger.httpResponseLog(request, response, data);
 
         return {
           statusCode: context.switchToHttp().getResponse().statusCode,

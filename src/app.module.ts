@@ -1,4 +1,3 @@
-import { Logger } from './common/helpers/logger';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
@@ -11,6 +10,6 @@ import { CustomConfigModule } from './common/configs/config.module';
 @Module({
   imports: [CustomConfigModule, ConnectionModule, ServiceModule],
   controllers: [AppController],
-  providers: [AppService, Logger],
+  providers: [AppService],
 })
 export class AppModule {}

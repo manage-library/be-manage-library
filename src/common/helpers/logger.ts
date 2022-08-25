@@ -1,3 +1,4 @@
+import { NODE_ENV } from './../../constants/EnvKey';
 import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
 import * as winstonCloudWatch from 'winston-cloudwatch';
@@ -18,17 +19,21 @@ export class Logger {
   constructor() {
     this.logger = winston.createLogger({
       format: winston.format.json(),
-      transports: [
+      transports: [new winston.transports.File({ filename: 'system.log' })],
+    });
+
+    if (process.env.NODE_ENV === 'dev') {
+      this.logger.add(
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.colorize(),
             winston.format.timestamp(),
           ),
         }),
-      ],
-    });
+      );
+    }
 
-    if (process.env.NODE_ENV) {
+    if (process.env.NODE_ENV === 'production') {
       const cloudwatchConfig = {
         logGroupName: process.env.AWS_CLOUD_WATCH_GROUP_NAME,
         logStreamName: `${process.env.AWS_CLOUD_WATCH_GROUP_NAME}-${process.env.NODE_ENV}`,
@@ -48,39 +53,44 @@ export class Logger {
     }
   }
 
-  httpRequestLog(req: any, res: any, next: any) {
-    const requestLog = {
+  httpResponseLog(req: any, res: any, data: any) {
+    const responseLog = {
+      title: `HTTP request - ${req.correlationId}`,
+      message: `HTTP request - ${req.correlationId}`,
       timestamp: new Date().toISOString(),
       correlationId: req.correlationId,
-      level: LogLevel.Debug,
+      level: LogLevel.Info,
+      status: true,
+      statusCode: res.statusCode,
       method: req.method,
       originalUri: req.originalUrl,
       uri: req.url,
-      title: `HTTP Request - ${req.correlationId}`,
-      message: `HTTP Request - ${req.correlationId}`,
       request: {
         params: req.params,
         query: req.query,
         body: req.body,
         headers: req.headers,
       },
+      response: {
+        data,
+      },
     };
 
-    this.log(requestLog);
-    next();
+    this.log(responseLog);
   }
 
-  httpResponseLog(req: any, res: any, data: any) {
+  httpResponseLogError(req: any, res: any, data: any) {
     const responseLog = {
+      title: `HTTP request - ${req.correlationId}`,
+      message: `HTTP request - ${req.correlationId}`,
       timestamp: new Date().toISOString(),
       correlationId: req.correlationId,
-      level: LogLevel.Debug,
+      level: LogLevel.Error,
+      status: false,
       statusCode: res.statusCode,
       method: req.method,
       originalUri: req.originalUrl,
       uri: req.url,
-      title: `HTTP Response - ${req.correlationId}`,
-      message: `HTTP Response - ${req.correlationId}`,
       request: {
         params: req.params,
         query: req.query,
