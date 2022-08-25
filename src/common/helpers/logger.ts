@@ -7,6 +7,7 @@ export interface ILogEntry {
   timestamp?: string;
   level: LogLevel;
   message: string;
+  title?: string;
   [optionName: string]: any;
 }
 
@@ -34,13 +35,15 @@ export class Logger {
         awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
         awsSecretKey: process.env.AWS_CLOUD_WATCH_SECRET_ACCESS_KEY,
         awsRegion: process.env.AWS_REGION,
-        messageFormatter: ({ level, message, ...additionalInfo }) =>
-          `[${level}] : ${message} \nAdditional Info: ${JSON.stringify(
-            additionalInfo,
+        messageFormatter: ({ level, title, message, ...additionalInfo }) =>
+          `[${level}] : ${title || message} \nAdditional Info: ${JSON.stringify(
+            {
+              ...additionalInfo,
+              message,
+            },
           )}`,
       };
 
-      console.log(new winstonCloudWatch(cloudwatchConfig));
       this.logger.add(new winstonCloudWatch(cloudwatchConfig));
     }
   }
@@ -50,66 +53,46 @@ export class Logger {
       timestamp: new Date().toISOString(),
       correlationId: req.correlationId,
       level: LogLevel.Debug,
-      clientIP: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
       method: req.method,
       originalUri: req.originalUrl,
       uri: req.url,
-      referer: req.headers.referer || '',
-      userAgent: req.headers['user-agent'],
+      title: `HTTP Request - ${req.correlationId}`,
       message: `HTTP Request - ${req.correlationId}`,
       request: {
-        body: JSON.parse({ ...req.body }),
+        params: req.params,
+        query: req.query,
+        body: req.body,
         headers: req.headers,
       },
     };
-    res.setHeader('x-request-id', req.correlationId);
 
     this.log(requestLog);
     next();
   }
 
-  httpResponseLog(req: any, res: any, next: any) {
-    const rawResponse = res.write;
-    const rawResponseEnd = res.end;
-    const chunks: any[] = [];
-    res.write = (...restArgs: any[]) => {
-      chunks.push(new Buffer(restArgs[0]));
-      rawResponse.apply(res, restArgs);
-    };
-    res.end = (...restArgs: any[]) => {
-      if (restArgs[0]) {
-        chunks.push(new Buffer(restArgs[0]));
-      }
-      const body = Buffer.concat(chunks).toString('utf8');
-
-      const responseLog = {
-        timestamp: new Date().toISOString(),
-        correlationId: req.correlationId,
-        level: LogLevel.Debug,
-        statusCode: res.statusCode,
-        clientIP:
-          req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-        method: req.method,
-        originalUri: req.originalUrl,
-        uri: req.url,
-        referer: req.headers.referer || '',
-        userAgent: req.headers['user-agent'],
-        message: `HTTP Response - ${req.correlationId}`,
-        request: {
-          body: req.body,
-          headers: req.headers,
-        },
-        response: {
-          body,
-          headers: res.getHeaders(),
-        },
-      };
-
-      this.log(responseLog);
-      rawResponseEnd.apply(res, restArgs);
+  httpResponseLog(req: any, res: any, data: any) {
+    const responseLog = {
+      timestamp: new Date().toISOString(),
+      correlationId: req.correlationId,
+      level: LogLevel.Debug,
+      statusCode: res.statusCode,
+      method: req.method,
+      originalUri: req.originalUrl,
+      uri: req.url,
+      title: `HTTP Response - ${req.correlationId}`,
+      message: `HTTP Response - ${req.correlationId}`,
+      request: {
+        params: req.params,
+        query: req.query,
+        body: req.body,
+        headers: req.headers,
+      },
+      response: {
+        data,
+      },
     };
 
-    next();
+    this.log(responseLog);
   }
 
   log(logEntry: ILogEntry) {

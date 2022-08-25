@@ -9,11 +9,24 @@ import { AppModule } from './app.module';
 import { PORT } from './constants/EnvKey';
 import { TransformInterceptor } from './interceptors/index';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { Logger } from './common/helpers/logger';
+import { v4 as uuid } from 'uuid';
+import { Request } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.use((req: Request, res: Response, next: () => void) => {
+    const correlationId = uuid();
+    req.timestamp = Date.now();
+    req.correlationId = correlationId;
+    next();
+  });
+
+  const logger = new Logger();
+
+  app.useGlobalInterceptors(new TransformInterceptor(logger));
+  app.useGlobalFilters(new HttpExceptionFilter(logger));
 
   const configService = app.get(ConfigService);
 
