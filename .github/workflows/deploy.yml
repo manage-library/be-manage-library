@@ -17,11 +17,11 @@ jobs:
       - run: npm i
       - run: npm run lint
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - npm run test
-  #   needs: [lint]
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - npm run test
+    needs: [lint]
 
   # build:
   #   runs-on: ubuntu-latest
