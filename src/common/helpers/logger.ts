@@ -1,4 +1,3 @@
-import { NODE_ENV } from './../../constants/EnvKey';
 import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
 import * as winstonCloudWatch from 'winston-cloudwatch';
@@ -43,8 +42,8 @@ export class Logger {
         messageFormatter: ({ level, title, message, ...additionalInfo }) =>
           `[${level}] : ${title || message} \nAdditional Info: ${JSON.stringify(
             {
-              ...additionalInfo,
               message,
+              ...additionalInfo,
             },
           )}`,
       };
