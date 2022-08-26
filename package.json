@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "export NODE_OPTIONS='--max-old-space-size=8192' && nest build",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -21,11 +21,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migration:create": "typeorm migration:create -n",
     "migration:run": "typeorm migration:run",
-    "migration:dev": "docker exec order_dev npm run migration:run",
-    "migration:prod": "docker exec order_prod npm run migration:run",
-    "database:dev": "docker-compose --env-file .env up -d order_db order_dev",
-    "database:prod": "docker-compose --env-file .env up -d order_db order_prod",
-    "database:down": "docker-compose down"
+    "migration:prod": "docker exec nestjs-api npm run migration:run",
+    "docker:dev": "docker-compose --env-file .env up -d mysql",
+    "docker:prod": "docker-compose --env-file .env up -d mysql nestjs-api",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker build -t ghcr.io/duyhoan1710/nestjs-api:1.0.0 .",
+    "docker:push": "docker push ghcr.io/duyhoan1710/nestjs-api:1.0.0"
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.154.0",
