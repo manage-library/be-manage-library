@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@main
         env:
@@ -59,4 +59,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
           TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+          
+      - run: pwd
     # needs: build
