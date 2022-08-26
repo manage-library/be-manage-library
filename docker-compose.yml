@@ -4,9 +4,9 @@ services:
   nestjs-api:
     container_name: nestjs-api
     image: ghcr.io/duyhoan1710/nestjs-api:1.0.0
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
