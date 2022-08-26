@@ -60,16 +60,13 @@ jobs:
       #     aws-region: ${{ secrets.AWS_REGION }}
 
       - name: aws run docker-compose
-        uses: peterkimzz/aws-ssm-send-command@master
+        uses: rusrushal13/aws-ssm-send-command@master
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
 
-          working-directory: /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
           command: ls -al
-          comment: docker-compose up -d
 
       # - name: Deploy to server
       #   uses: easingthemes/ssh-deploy@main
