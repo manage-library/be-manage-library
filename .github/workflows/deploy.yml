@@ -66,7 +66,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-          command: ls -al
+          working-directory: /home/ubuntu/nestjs-api
+          command: pwd
 
       # - name: Deploy to server
       #   uses: easingthemes/ssh-deploy@main
