@@ -52,13 +52,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
-          
-      - run: pwd
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: aws run docker-compose
+        uses: peterkimzz/aws-ssm-send-command@master
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
+
+          working-directory: /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
+          command: ls -al
+          comment: docker-compose up -d
+
+      # - name: Deploy to server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+      #     REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+      #     REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+      #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
     # needs: build
