@@ -50,21 +50,21 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:    
-      # - name: Deploy to server
-      #   uses: easingthemes/ssh-deploy@main
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-      #     REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-      #     REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-      #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       - uses: actions/checkout@v3
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       - run: |
           cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
           docker-compose up -d
           npm i
           num run build
           pm2 start "npm run start:prod"
-          
+
       # - run: docker-compose up -d
       # - run: npm i
       # - npm: npm run build
