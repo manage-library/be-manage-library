@@ -8,7 +8,7 @@ on:
 
 jobs:
   tslint:
-    runs-on: ubuntu-latest
+    runs-on: self-host
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -50,15 +50,15 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v3   
       - uses: actions/setup-node@v3
         with:
           node-version: '14.0.0'
-      - run: docker-compose up -d
-      - run: npm i
-      - npm: npm run build
-      - run: pm2 start "npm run start:prod"
+      # - run: cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
+      # - run: docker-compose up -d
+      # - run: npm i
+      # - npm: npm run build
+      # - run: pm2 start "npm run start:prod"
 
   #     - name: Configure AWS Credentials
   #       uses: aws-actions/configure-aws-credentials@v1
