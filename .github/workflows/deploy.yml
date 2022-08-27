@@ -52,12 +52,7 @@ jobs:
     steps:    
       - uses: actions/checkout@v3
       - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+      - run: rsync -avz . ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com:/home/ubuntu/nestjs-api/
       - run: |
           cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
           docker-compose up -d
