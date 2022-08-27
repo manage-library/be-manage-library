@@ -64,7 +64,7 @@ jobs:
       - run: 'echo -e "Host *\n\tStrictHostKeyChecking no\n\tControlMaster auto\n\tControlPath /tmp/ansible-%r@%h:%p\n\tControlPersist 15m\n\tPreferredAuthentications publickey
     \n\n" > ~/.ssh/config'
       - run: chmod go-wrx ~/.ssh
-      - run: ls ~/.ssh
+      - run: ls
 
     #   - run: ssh ubuntu@ec2-35-89-219-63.us-west-2.compute.amazonaws.com
     #   - run: ls
