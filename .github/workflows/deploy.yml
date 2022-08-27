@@ -59,7 +59,7 @@ jobs:
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #     aws-region: ${{ secrets.AWS_REGION }}
 
-      - run: docker-compose up -d
+      - run: docker-compose -v
 
     #   - run: ssh ubuntu@ec2-35-89-219-63.us-west-2.compute.amazonaws.com
     #   - run: ls
