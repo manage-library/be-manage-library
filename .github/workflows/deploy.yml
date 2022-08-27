@@ -52,9 +52,9 @@ jobs:
     steps:    
       - uses: actions/checkout@v3
       - name: Deploy to server
-      - run: rsync -avz . ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com:/home/ubuntu/nestjs-api/
       - run: |
-          cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
+          rsync -avz . ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com:/home/ubuntu/nestjs-api/
+          cd /home/ubuntu/nestjs-api
           docker-compose up -d
           npm i
           num run build
