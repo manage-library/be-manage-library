@@ -50,10 +50,16 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:    
+      - uses: actions/checkout@v3
+
       - name: Deploy to server
-        uses: actions/checkout@v3
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       - run: |
-          rsync -avz ./ ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com:/home/ubuntu/nestjs-api/
           cd /home/ubuntu/nestjs-api
           docker-compose up -d
           npm i
