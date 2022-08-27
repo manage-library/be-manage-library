@@ -59,8 +59,12 @@ jobs:
       #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       - uses: actions/checkout@v3
       - run: |
-          cd /home/ubuntu
-          pwd
+          cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
+          docker-compose up -d
+          npm i
+          num run build
+          pm2 start "npm run start:prod"
+          
       # - run: docker-compose up -d
       # - run: npm i
       # - npm: npm run build
