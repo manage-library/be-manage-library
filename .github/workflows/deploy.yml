@@ -57,6 +57,7 @@ jobs:
       #     REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
       #     REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
       #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+      - uses: actions/checkout@v3
       - run: |
         echo "abc"
         cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
