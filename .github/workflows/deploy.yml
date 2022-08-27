@@ -47,15 +47,15 @@ jobs:
   #     - run: npm run docker:push
     # needs: test
 
-  # deploy:
-  #   runs-on: self-hosted
-  #   steps:
-  #     - uses: actions/checkout@v3
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - run: docker-compose up -d
-  #     - run: npm i
-  #     - npm: npm run build
-  #     - run: pm2 start "npm run start:prod"
+      - run: docker-compose up -d
+      - run: npm i
+      - npm: npm run build
+      - run: pm2 start "npm run start:prod"
 
   #     - name: Configure AWS Credentials
   #       uses: aws-actions/configure-aws-credentials@v1
