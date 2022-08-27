@@ -50,8 +50,8 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:    
-      - uses: actions/checkout@v3
       - name: Deploy to server
+      - uses: actions/checkout@v3
       - run: |
           rsync -avz . ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com:/home/ubuntu/nestjs-api/
           cd /home/ubuntu/nestjs-api
