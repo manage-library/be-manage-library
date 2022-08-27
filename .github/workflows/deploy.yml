@@ -65,7 +65,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.ACTOR }}
           password: ${{ secrets.SECRET_TOKEN }}
-      - run: sudo docker-compose up -d
+      - run: docker-compose up -d
 
     #   - run: ssh ubuntu@ec2-35-89-219-63.us-west-2.compute.amazonaws.com
     #   - run: ls
