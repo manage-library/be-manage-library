@@ -65,6 +65,9 @@ jobs:
     \n\n" > ~/.ssh/config'
       - run: chmod go-wrx ~/.ssh
 
+      - run: ssh ubuntu@ec2-35-89-219-63.us-west-2.compute.amazonaws.com
+      - run: ls
+
       # - name: AWS run docker-compose
       #   uses: peterkimzz/aws-ssm-send-command@master
       #   with:
