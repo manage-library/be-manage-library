@@ -65,8 +65,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: |
-            i-079ec694682344ad1
+          instance-ids: i-079ec694682344ad1
 
           working-directory: /home/ubuntu/nestjs-api
           command: pwd
