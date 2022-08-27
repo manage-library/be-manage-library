@@ -58,8 +58,8 @@ jobs:
           REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
           TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       - run: ls
+      - run: cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
       - run: pwd
-      # - run: cd /home/ubuntu/${{ secrets.AWS_REMOTE_TARGET }}
       # - run: docker-compose up -d
       # - run: npm i
       # - npm: npm run build
