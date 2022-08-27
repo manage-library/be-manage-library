@@ -59,16 +59,25 @@ jobs:
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #     aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: AWS run docker-compose
-        uses: peterkimzz/aws-ssm-send-command@master
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: i-079ec694682344ad1
+      - name: Start AWS EC2
+        run: |
+          aws ec2 start-instances --instance-ids ${{secrets.AWS_INSTANCE_ID }}
+          pwd
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
-          working-directory: /home/ubuntu/nestjs-api
-          command: pwd
+      # - name: AWS run docker-compose
+      #   uses: peterkimzz/aws-ssm-send-command@master
+      #   with:
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     instance-ids: i-079ec694682344ad1
+
+      #     working-directory: /home/ubuntu/nestjs-api
+      #     command: pwd
 
       # - name: Deploy to server
       #   uses: easingthemes/ssh-deploy@main
