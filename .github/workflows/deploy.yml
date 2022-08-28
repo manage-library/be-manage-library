@@ -43,7 +43,7 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.ACTOR }}
           password: ${{ secrets.SECRET_TOKEN }}
-      - run: echo ${{ secrets.ENV }} > .env
+      - run: echo "${{ secrets.ENV }}" > .env
       - run: npm run docker:build
       - run: npm run docker:push
     # needs: test
