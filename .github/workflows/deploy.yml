@@ -80,4 +80,4 @@ jobs:
             docker-compose down
             docker pull ghcr.io/duyhoan1710/nestjs-api:1.0.0
             docker-compose up -d
-    needs: build
+    # needs: build
