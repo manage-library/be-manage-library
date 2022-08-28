@@ -49,30 +49,30 @@ jobs:
           tags: ${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
     needs: test
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:    
-  #     - uses: actions/checkout@v3
-  #     - run: echo "${{ secrets.ENV }}" > .env
+  deploy:
+    runs-on: ubuntu-latest
+    steps:    
+      - uses: actions/checkout@v3
+      - run: echo "${{ secrets.ENV }}" > .env
 
-  #     - name: Deploy to server
-  #       uses: easingthemes/ssh-deploy@main
-  #       env:
-  #         SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-  #         REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-  #         REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-  #         TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       
-  #     - name: Rebuild server
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.AWS_REMOTE_HOST }}
-  #         username: ${{ secrets.AWS_REMOTE_USER }}
-  #         key: ${{ secrets.AWS_SERVER_SSH_KEY }}
-  #         script: |
-  #           cd ${{ secrets.AWS_REMOTE_TARGET }}
-  #           docker rmi ${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
-  #           docker pull ${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
-  #           docker-compose down
-  #           docker-compose up -d
-  #   needs: build
+      - name: Rebuild server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_REMOTE_HOST }}
+          username: ${{ secrets.AWS_REMOTE_USER }}
+          key: ${{ secrets.AWS_SERVER_SSH_KEY }}
+          script: |
+            cd ${{ secrets.AWS_REMOTE_TARGET }}
+            docker rmi ${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
+            docker pull ${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
+            docker-compose down
+            docker-compose up -d
+    needs: build
