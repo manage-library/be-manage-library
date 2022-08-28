@@ -28,24 +28,24 @@ jobs:
   #     - run: npm run test
   #   needs: tslint
 
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '14.0.0'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14.0.0'
 
-  #     - name: Login to github registry
-  #       uses: docker/login-action@v2
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ secrets.ACTOR }}
-  #         password: ${{ secrets.SECRET_TOKEN }}
-  #     - run: echo "${{ secrets.ENV }}" > .env
-  #     - run: npm run docker:build
-  #     - run: npm run docker:push
+      - name: Login to github registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.ACTOR }}
+          password: ${{ secrets.SECRET_TOKEN }}
+      - run: echo "${{ secrets.ENV }}" > .env
+      - run: npm run docker:build
+      - run: npm run docker:push
     # needs: test
 
   deploy:
@@ -79,4 +79,4 @@ jobs:
             cd nestjs-api
             docker pull ghcr.io/duyhoan1710/nestjs-api:1.0.0
             docker-compose up -d
-    # needs: build
+    needs: build
