@@ -46,7 +46,7 @@ jobs:
       - run: echo "${{ secrets.ENV }}" > .env
       - run: npm run docker:build
       - run: npm run docker:push
-    needs: test
+    # needs: test
 
   deploy:
     runs-on: ubuntu-latest
