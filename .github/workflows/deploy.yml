@@ -71,6 +71,7 @@ jobs:
           ssh -tt -i ./key_pem.cer ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com
           pwd
           ls -la
+          exit
       # - name: Deploy to server
       #   uses: easingthemes/ssh-deploy@main
       #   env:
