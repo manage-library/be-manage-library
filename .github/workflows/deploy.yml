@@ -68,7 +68,7 @@ jobs:
       - run: ls
       - run: cat key_pem.cer
       - run: |
-          ssh -t -i ./key_pem.cer ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com
+          ssh -i ./key_pem.cer ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com
           pwd
           ls -la
           exit
