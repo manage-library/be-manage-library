@@ -78,6 +78,6 @@ jobs:
           key: ${{ secrets.AWS_SERVER_SSH_KEY }}
           script: |
             cd nestjs-api
-            echo "$IMAGE_NAME:$IMAGE_TAG"
+            echo "${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
             echo "ghcr.io/duyhoan1710/nestjs-api:1.0.0"
     # needs: build
