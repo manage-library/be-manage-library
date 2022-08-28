@@ -70,4 +70,4 @@ jobs:
           script: |
             cd nestjs-api
             docker-compose up -d
-    # needs: build
+    needs: build
