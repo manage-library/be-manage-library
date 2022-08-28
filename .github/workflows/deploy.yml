@@ -74,4 +74,4 @@ jobs:
             docker rmi ghcr.io/duyhoan1710/nestjs-api:1.0.0
             docker pull ghcr.io/duyhoan1710/nestjs-api:1.0.0
             docker-compose up -d
-    needs: build
+    # needs: build
