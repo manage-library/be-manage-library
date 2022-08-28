@@ -46,7 +46,7 @@ jobs:
       - run: echo ${{ secrets.ENV }} > .env
       - run: npm run docker:build
       - run: npm run docker:push
-    needs: test
+    # needs: test
 
   deploy:
     runs-on: ubuntu-latest
@@ -61,7 +61,8 @@ jobs:
           REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
           TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       
-      - uses: appleboy/ssh-action@master
+      - name: Rebuild server
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_REMOTE_HOST }}
           username: ${{ secrets.AWS_REMOTE_USER }}
