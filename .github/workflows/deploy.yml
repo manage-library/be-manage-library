@@ -54,7 +54,7 @@ jobs:
     steps:    
       - uses: actions/checkout@v3
       - run: ls
-      - run: echo ${{ secrets.AWS_SERVER_SSH_KEY }} >> key_pem.cer
+      - run: echo "${{ secrets.AWS_SERVER_SSH_KEY }}" >> key_pem.cer
       - run: ls
       - run: cat key_pem.cer
       # - name: Deploy to server
