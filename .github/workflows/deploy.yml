@@ -47,23 +47,24 @@ jobs:
   #     - run: npm run docker:push
     # needs: test
 
-  deploy:
-    runs-on: self-hosted
-    steps:    
-      - uses: actions/checkout@v3
+  # deploy:
+  #   runs-on: self-hosted
+  #   steps:    
+  #     - uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
-      - run: |
-          cd /home/ubuntu/nestjs-api
-          docker-compose up -d
-          npm i
-          export NODE_OPTIONS="--max-old-space-size=8192"
-          npm run build
-          pm2 start "npm run start:prod"
+  #     - name: Deploy to server
+  #       uses: easingthemes/ssh-deploy@main
+  #       env:
+  #         SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+  #         REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+  #         REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+  #         TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+  #         SOURCE: 
+  #     - run: |
+  #         cd /home/ubuntu/nestjs-api
+  #         docker-compose up -d
+  #         npm i
+  #         export NODE_OPTIONS="--max-old-space-size=8192"
+  #         npm run build
+  #         pm2 start "npm run start:prod"
     # needs: build
