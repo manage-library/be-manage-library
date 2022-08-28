@@ -3,7 +3,7 @@ version: '3.0'
 services:
   nestjs-api:
     container_name: nestjs-api
-    image: ghcr.io/duyhoan1710/nestjs-api:1.0.0
+    image: ghcr.io/duyhoan1710/nestjs-api
     # build:
     #   context: .
     #   dockerfile: ./Dockerfile
