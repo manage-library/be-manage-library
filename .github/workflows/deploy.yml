@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
       - uses: actions/checkout@v3
+      - run: ls
       - run: | 
           touch key_pem.cer
           echo ${{ secrets.AWS_SERVER_SSH_KEY }} > key_pem.cer
