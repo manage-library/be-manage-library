@@ -40,9 +40,6 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
 # watch mode
 $ npm run docker:dev
 $ npm run start:dev
