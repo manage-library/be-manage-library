@@ -70,5 +70,6 @@ jobs:
           key: ${{ secrets.AWS_SERVER_SSH_KEY }}
           script: |
             cd nestjs-api
+            docker pull ghcr.io/duyhoan1710/nestjs-api:1.0.0
             docker-compose up -d
     # needs: build
