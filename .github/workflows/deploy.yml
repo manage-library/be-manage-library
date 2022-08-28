@@ -53,7 +53,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
       - uses: actions/checkout@v3
-      - run: echo ${{ secrets.AWS_SERVER_SSH_KEY }} > key_pem.cer
+      - run: | 
+          touch key_pem.cer
+          echo ${{ secrets.AWS_SERVER_SSH_KEY }} > key_pem.cer
       - run: ls
       - run: cat key_pem.cer
       # - name: Deploy to server
