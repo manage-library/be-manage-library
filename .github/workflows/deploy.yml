@@ -54,24 +54,23 @@ jobs:
     steps:    
       - uses: actions/checkout@v3
 
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+      # - name: Deploy to server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+      #     REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+      #     REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+      #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       
-      - run: ls
-      - run: echo "${{ secrets.AWS_SERVER_SSH_KEY }}" > key_pem.cer
-      - run: chmod 400 key_pem.cer
-      - run: ls
-      - run: cat key_pem.cer
-      - run: |
-          ssh -i ./key_pem.cer ubuntu@ec2-35-91-53-66.us-west-2.compute.amazonaws.com
-          pwd
-          ls -la
-          exit
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_REMOTE_HOST }}
+          username: ${{ secrets.AWS_REMOTE_USER }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script: |
+            ls -la
+            pwd
       # - name: Deploy to server
       #   uses: easingthemes/ssh-deploy@main
       #   env:
