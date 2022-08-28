@@ -68,7 +68,7 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.ACTOR }}
           password: ${{ secrets.SECRET_TOKEN }}
-          
+
       - name: Rebuild server
         uses: appleboy/ssh-action@master
         with:
