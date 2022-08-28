@@ -28,57 +28,45 @@ jobs:
   #     - run: npm run test
   #   needs: tslint
 
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '14.0.0'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14.0.0'
 
-  #     - name: Login to github registry
-  #       uses: docker/login-action@v2
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ secrets.ACTOR }}
-  #         password: ${{ secrets.SECRET_TOKEN }}
-  #     - run: echo ${{ secrets.ENV }} > .env
-  #     - run: cat .env
-  #     - run: npm run docker:build
-  #     - run: npm run docker:push
-    # needs: test
+      - name: Login to github registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.ACTOR }}
+          password: ${{ secrets.SECRET_TOKEN }}
+      - run: echo ${{ secrets.ENV }} > .env
+      - run: npm run docker:build
+      - run: npm run docker:push
+    needs: test
 
   deploy:
     runs-on: ubuntu-latest
     steps:    
       - uses: actions/checkout@v3
 
-      # - name: Deploy to server
-      #   uses: easingthemes/ssh-deploy@main
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-      #     REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-      #     REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-      #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
+          TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
       
       - uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_REMOTE_HOST }}
           username: ${{ secrets.AWS_REMOTE_USER }}
           key: ${{ secrets.AWS_SERVER_SSH_KEY }}
-          port: 22
           script: |
-            ls -la
-            pwd
-      # - name: Deploy to server
-      #   uses: easingthemes/ssh-deploy@main
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.AWS_SERVER_SSH_KEY }}
-      #     REMOTE_HOST: ${{ secrets.AWS_REMOTE_HOST }}
-      #     REMOTE_USER: ${{ secrets.AWS_REMOTE_USER }}
-      #     TARGET: ${{ secrets.AWS_REMOTE_TARGET }}
-      # - run: |
-      #     cd /home/ubuntu/nestjs-api
-      #     docker-compose up -d
+            cd nestjs-api
+            docker-compose up -d
     # needs: build
