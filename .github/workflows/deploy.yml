@@ -66,7 +66,7 @@ jobs:
         with:
           host: ${{ secrets.AWS_REMOTE_HOST }}
           username: ${{ secrets.AWS_REMOTE_USER }}
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.AWS_SERVER_SSH_KEY }}
           port: 22
           script: |
             ls -la
